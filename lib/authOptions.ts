@@ -62,7 +62,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
-        token.image = user.avatarUrl || user.image;
+        token.image = user.avatarUrl! || user.image!;
       }
 
       if (trigger === "update" || token.email) {

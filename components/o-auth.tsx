@@ -15,31 +15,18 @@ interface OAuthProps {
 
 const OAuth: React.FC<OAuthProps> = ({
   loading,
-  setError,
   setLoading,
 }) => {
   async function handleGoogleOAuth() {
-    setError(null);
     setLoading((prev) => ({ ...prev, google: true }));
-
-    try {
-      await signIn("google", { callbackUrl: "/panel" });
-    } catch {
-      setError("Google login failed");
-      setLoading((prev) => ({ ...prev, google: false }));
-    }
+    await signIn("google", { callbackUrl: "/panel" });
+    setLoading((prev) => ({ ...prev, google: false }));
   }
 
   async function handleGithubOAuth() {
-    setError(null);
     setLoading((prev) => ({ ...prev, github: true }));
-
-    try {
-      await signIn("github", { callbackUrl: "/panel" });
-    } catch {
-      setError("Github login failed");
-      setLoading((prev) => ({ ...prev, github: false }));
-    }
+    await signIn("github", { callbackUrl: "/panel" });
+    setLoading((prev) => ({ ...prev, github: false }));
   }
 
   return (
