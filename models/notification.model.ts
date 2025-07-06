@@ -2,7 +2,8 @@ import mongoose, { Document, Schema, Types } from 'mongoose';
 
 export interface INotification extends Document {
     user: Types.ObjectId;
-    fromUser: Types.ObjectId;
+    fromUser?: Types.ObjectId;
+    type: 'system' | 'apply';
     message: string;
     read: boolean;
     link?: string;
@@ -12,8 +13,9 @@ export interface INotification extends Document {
 
 const notificationSchema = new Schema<INotification>({
     user:     { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    fromUser:     { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    fromUser:     { type: Schema.Types.ObjectId, ref: 'User' },
     message:  { type: String, required: true },
+    type:  { type: String, required: true, default: 'system' },
     read:     { type: Boolean, default: false },
     link:     { type: String },
     createdAt:{ type: Date, default: Date.now },
