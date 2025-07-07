@@ -124,7 +124,7 @@ export default async function UserProfile({ params }: UserProfileProps) {
 
             {isCurrentUser && (
               <div className="mt-8">
-                <EditProfile />
+                <EditProfile user={user}/>
               </div>
             )}
           </div>

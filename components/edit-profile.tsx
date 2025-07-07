@@ -16,53 +16,77 @@ import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { updateProfile } from "@/services/user";
 import { useSession } from "next-auth/react";
+import { IUser } from "@/models/user.model";
 
 
-export function EditProfile() {
-    const [openToWork, setOpenToWork] = useState(true);
-    const [experienceLevel, setExperienceLevel] = useState<"junior" | "mid" | "senior" | "lead">("mid");
-    const [techStack, setTechStack] = useState<string[]>([]);
-    const [avatarFile, setAvatarFile] = useState<File | null>(null);
+export function EditProfile({user} : {user: IUser}) {
     const [isLoading,setIsLoading] = useState(false);
     const { data:session,update } = useSession()
 
-    const handleTechAdd = (tech: string) => {
-        if (!techStack.includes(tech)) {
-            setTechStack([...techStack, tech]);
-        }
-    };
+    const [formData, setFormData] = useState({
+        name: user.name || '',
+        username: user.username || '',
+        bio: user.bio || '',
+        headLine: user.headLine || '',
+        githubUrl: user.githubUrl || '',
+        websiteUrl: user.websiteUrl || '',
+        openToWork: user.openToWork  || false,
+        experienceLevel: user.experienceLevel || '',
+        techStack: user.techStack || [] as string[],
+        avatar: null as File | null,
+    });
 
-    const handleTechDelete = (techToDelete:string) =>{
-        const newTechs = techStack.filter((tech: string) => tech !== techToDelete)
-        setTechStack(newTechs)
-    }
+    console.log(user);
+    
+      
+    
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+      ) => {
+        const { name, value, type, checked, files } = e.target;
+      
+        setFormData((prev) => ({
+          ...prev,
+          [name]:
+            type === 'checkbox'
+              ? checked
+              : type === 'file'
+              ? files?.[0] || null
+              : value,
+        }));
+    };
+      
+
+    const handleTechAdd = (tech: string) => {
+        setFormData((prev) => {
+            if (prev.techStack.includes(tech)) return prev;
+            return {
+                ...prev,
+                techStack: [...prev.techStack, tech],
+            };
+        });
+    };
+      
+    const handleTechDelete = (techToDelete: string) => {
+        setFormData((prev) => ({
+            ...prev,
+            techStack: prev.techStack.filter((tech) => tech !== techToDelete),
+        }));
+    };
+      
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true)
-        const form = e.target as HTMLFormElement;
-        const formData = new FormData(form);
 
-        const data = {
-            name: formData.get("name"),
-            username: formData.get("username"),
-            bio: formData.get("bio"),
-            headLine: formData.get("headLine"),
-            githubUrl: formData.get("githubUrl"),
-            websiteUrl: formData.get("websiteUrl"),
-            openToWork,
-            experienceLevel,
-            techStack,
-            avatar: avatarFile,
-        };
-
+        console.log(formData)
         try{
-            const response = await updateProfile(data)
-            console.log(response);
-            if(response.status === 200){
-                toast.success("Profile data updated successfully")
-                await update()
-            }
+            // const response = await updateProfile(formData)
+            // console.log(response);
+            // if(response.status === 200){
+            //     toast.success("Profile data updated successfully")
+            //     await update()
+            // }
             
         }catch{
             toast.error('Failed to update profile data')
@@ -92,19 +116,19 @@ export function EditProfile() {
             <div className="flex flex-col gap-4">
               <div>
                 <Label htmlFor="name">Name</Label>
-                <Input id="name" name="name" defaultValue="Soufian Boukir" className="mt-2"/>
+                <Input id="name" name="name" value={formData.name} onChange={handleChange} className="mt-2"/>
               </div>
               <div>
                 <Label htmlFor="username">Username</Label>
-                <Input id="username" name="username" defaultValue="soufian" className="mt-2"/>
+                <Input id="username" name="username" value={formData.username} onChange={handleChange} className="mt-2"/>
               </div>
               <div>
                 <Label htmlFor="headLine">Headline</Label>
-                <Input id="headLine" name="headLine" defaultValue="MERN & Next.js Developer" className="mt-2"/>
+                <Input id="headLine" name="headLine" value={formData.headLine} onChange={handleChange} className="mt-2"/>
               </div>
               <div>
                 <Label htmlFor="bio">Bio</Label>
-                <Textarea id="bio" name="bio" rows={3} defaultValue="Building scalable platforms" className="mt-2"/>
+                <Textarea id="bio" name="bio" rows={3} value={formData.bio} onChange={handleChange} className="mt-2"/>
               </div>
               <div>
                 <Label htmlFor="avatar">Avatar Image</Label>
@@ -112,7 +136,7 @@ export function EditProfile() {
                   id="avatar"
                   type="file"
                   accept="image/*"
-                  onChange={(e) => setAvatarFile(e.target.files?.[0] || null)} className="mt-2"
+                  onChange={handleChange} className="mt-2"
                 />
               </div>
             </div>
@@ -120,16 +144,16 @@ export function EditProfile() {
             <div className="flex flex-col gap-4">
               <div>
                 <Label htmlFor="githubUrl">GitHub/Gitlab URL</Label>
-                <Input id="githubUrl" name="githubUrl" defaultValue="https://github.com/soufianboukir" className="mt-2"/>
+                <Input id="githubUrl" onChange={handleChange} value={formData.githubUrl} name="githubUrl" className="mt-2"/>
               </div>
               <div>
                 <Label htmlFor="websiteUrl">Website URL</Label>
-                <Input id="websiteUrl" name="websiteUrl" defaultValue="https://soufianboukir.com" className="mt-2"/>
+                <Input id="websiteUrl" onChange={handleChange} value={formData.websiteUrl} name="websiteUrl" className="mt-2"/>
               </div>
 
               <div>
                 <Label className="mb-2 block">Experience Level</Label>
-                <Select value={experienceLevel} onValueChange={(val) => setExperienceLevel(val as any)}>
+                <Select value={formData.experienceLevel} onValueChange={handleChange}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select level" />
                   </SelectTrigger>
@@ -146,8 +170,8 @@ export function EditProfile() {
                 <Label htmlFor="openToWork">Are you Open to Work?</Label>
                 <Switch
                   id="openToWork"
-                  checked={openToWork}
-                  onCheckedChange={setOpenToWork}
+                  checked={formData.openToWork}
+                  onCheckedChange={handleChange}
                 />
               </div>
 
@@ -155,7 +179,7 @@ export function EditProfile() {
                 <Label className="mb-1 block">Tech Stack</Label>
                 <div className="flex flex-wrap gap-2 mt-2">
                     <SelectTech onTechAdd={handleTechAdd}/>
-                    {techStack && techStack.length > 0 && techStack.map((tech) => (
+                    {formData.techStack && formData.techStack.length > 0 && formData.techStack.map((tech) => (
                         <div
                             key={tech}
                             className="group relative flex items-center bg-blue-600 text-white px-3 py-1 rounded-lg text-sm font-medium transition-all hover:bg-blue-700 shadow-sm hover:shadow-md"

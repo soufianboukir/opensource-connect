@@ -34,9 +34,11 @@ export async function POST(req: NextRequest) {
       | null;
     const githubUrl = formData.get("githubUrl") as string | null;
     const websiteUrl = formData.get("websiteUrl") as string | null;
-    const techStackRaw = formData.get("techStack") as string | null;
+    const techStackRaw = formData.get("techStack")
     const file = formData.get("image") as File | null;
 
+    console.log(techStackRaw);
+    
     await dbConnection();
 
     const user = await User.findOne({ email: session.user.email });
@@ -56,7 +58,7 @@ export async function POST(req: NextRequest) {
 
     if (techStackRaw) {
       try {
-        user.techStack = JSON.parse(techStackRaw);
+        user.techStack.push(techStackRaw)
       } catch {
         return NextResponse.json(
           { error: "Invalid techStack format, must be JSON array" },

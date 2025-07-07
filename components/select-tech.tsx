@@ -47,9 +47,9 @@ export function SelectTech({ onTechAdd }: TechStackComboboxProps) {
           <CommandList>
             <CommandEmpty>No tech found.</CommandEmpty>
             <CommandGroup>
-              {techs.map((tech) => (
+              {techs.map((tech,index) => (
                 <CommandItem
-                        key={tech}
+                        key={index}
                         value={tech}
                         onSelect={(currentValue) => {
                         setValue(currentValue === value ? "" : currentValue);
