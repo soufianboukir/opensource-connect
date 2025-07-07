@@ -1,4 +1,3 @@
-// app/(user)/profile/[username]/page.tsx
 import { Icon } from "@iconify/react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -11,6 +10,9 @@ import User, { IUser } from "@/models/user.model";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { capitalizeFirst } from "@/functions";
+import { Cake, Earth, Github } from "lucide-react";
+import Link from "next/link";
+import { EditProfile } from "@/components/edit-profile";
 
 interface UserProfileProps {
   params: {
@@ -57,15 +59,58 @@ export default async function UserProfile({ params }: UserProfileProps) {
             <p className="text-muted-foreground">
               @{user.username || "unknown"}
             </p>
+
+            <div className="flex items-center justify-center gap-3 mt-6">
+              <span className="dark:bg-white bg-black dark:text-black text-white px-3 rounded-xl">Senior</span>
+              <span className="bg-green-600 text-white px-3 py-0.5 rounded-xl">Open to work</span>
+            </div>
+
+            <div className="flex items-center justify-center gap-10 mt-6">
+              <span className="flex items-center gap-2 font-semibold justify-center">
+                <Cake  className="w-6 h-6"/> 
+                <span>
+                  Joined on {user.createdAt
+                  ? new Date(user.createdAt).toLocaleDateString()
+                  : "N/A"}
+                </span>
+              </span>
+              <span className="flex items-center gap-2 font-semibold justify-center">
+                {
+                  // user.websiteUrl && (
+                    <>
+                      <Earth  className="w-6 h-6"/> 
+                      <Link href={"https://soufianboukir.com"} className="hover:text-blue-500">
+                        {user.websiteUrl || 'https://soufianboukir.com'}
+                      </Link>
+                    </>
+                  // )
+                }
+              </span>
+
+              <span className="flex items-center gap-2 font-semibold justify-center">
+                {
+                  // user.githubUrl && (
+                    <>
+                      <Github  className="w-6 h-6"/> 
+                      <Link href={"https://github.com/soufianboukir"} className="hover:text-blue-500">
+                        {user.githubUrl || 'https://github.com/soufianboukir'}
+                      </Link>
+                    </>
+                  // )
+                }
+              </span>
+            </div>
+
+
             {/* {user.bio && ( */}
-              <p className="text-muted-foreground mt-2 max-w-xl mx-auto">
+              <p className="text-muted-foreground mt-6 max-w-xl mx-auto">
                 {user?.bio || "I enjoy turning ideas into fast, simple, and useful experiences. Here you'll find fragments of my curiosity, experiments, and ambition — written in code, shaped by open source, and shared with intention. Available for open-source projects using Express.js, TypeScript, Next.js, or React — happy to collaborate!"}
               </p>
             {/* )} */}
 
             <div className="mt-6 space-y-2 text-sm text-muted-foreground">
               <div className="flex flex-wrap justify-center gap-2 mt-4 max-w-2xl mx-auto">
-                {['nodejs','nextjs','python','nestjs','javascript','typescript','csharp','cpp','aspnet','django','laravel','mern','linux'].map((tech: string, index: number) => (
+                {['nodejs','nextjs','python','nestjs','mysql','postgresql','javascript','typescript','csharp','cpp','aspnet','django','laravel','mern','linux'].map((tech: string, index: number) => (
                   <span
                     key={index}
                     className="px-3 py-1 text-sm rounded-full bg-muted text-muted-foreground border border-border flex items-center gap-2"
@@ -75,34 +120,11 @@ export default async function UserProfile({ params }: UserProfileProps) {
                   </span>
                 )) || <p className="text-sm text-muted-foreground">Not specified</p>}
               </div>
-              {/* {user.githubUrl && ( */}
-                <p>
-                  <span className="font-medium text-foreground">GitHub:</span>{" "}
-                  <a
-                    href={user.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline dark:text-blue-400 cursor-pointer"
-                  >
-                    {/* {user.githubUrl} */}
-                    https://github.com/soufianboukir
-                  </a>
-                </p>
-              {/* )} */}
-              <p>
-                <span className="font-medium text-foreground">Joined on:</span>{" "}
-                {user.createdAt
-                  ? new Date(user.createdAt).toLocaleDateString()
-                  : "N/A"}
-              </p>
             </div>
 
-            {/* Edit Button */}
             {isCurrentUser && (
               <div className="mt-8">
-                <Button className="rounded-xl px-6 py-2 text-sm font-medium dark:bg-blue-400 dark:hover:bg-blue-500 bg-blue-600 hover:bg-blue-700">
-                  Edit Profile
-                </Button>
+                <EditProfile />
               </div>
             )}
           </div>

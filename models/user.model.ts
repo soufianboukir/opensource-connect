@@ -11,6 +11,7 @@ export interface IUser extends Document {
   experienceLevel: 'junior' | 'mid' | 'senior' | 'lead',
   avatarUrl?: string;
   githubUrl?: string;
+  websiteUrl?: string;
   techStack?: string[];
   createdAt: Date;
 }
@@ -22,10 +23,11 @@ const userSchema = new Schema<IUser>({
     email:      { type: String, required: true, unique: true },
     headLine: { type: String },
     openToWork: { type: Boolean},
-    experienceLevel: { type: String, enum: ['junior','mid','senior','lead']},
+    experienceLevel: { type: String, enum: ['junior','mid','senior','lead'], default: "junior"},
     bio:        { type: String },
     avatarUrl:  { type: String },
     githubUrl:  { type: String },
+    websiteUrl:  { type: String },
     techStack:  [{ type: String }],
     createdAt:  { type: Date, default: Date.now },
 });

@@ -43,7 +43,7 @@ export const techs = [
     "material-ui", "chakra-ui", "ant-design", "bootstrap",
     "tailwindcss", "foundation", "bulma",
     "storybook", "mdx",
-    "babel", "typescript", "eslint", "prettier",
+    "babel", "eslint", "prettier",
     "vite", "webpack", "rollup",
 ];
   

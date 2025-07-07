@@ -1,12 +1,12 @@
 "use client"
 
 import {
-  BadgeCheck,
   Bell,
   ChevronsUpDown,
   CreditCard,
   LogOut,
   Sparkles,
+  User,
 } from "lucide-react"
 
 import {
@@ -30,6 +30,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { signOut } from "next-auth/react"
+import Link from "next/link"
 
 export function NavUser({
   user,
@@ -92,8 +93,10 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+                <User />
+                <Link href={`/user/${user.username}`}>
+                  Profile
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />

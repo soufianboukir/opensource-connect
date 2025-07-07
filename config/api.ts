@@ -8,5 +8,5 @@ const getBaseUrl = ():string =>{
 
 
 export const api = axios.create({
-    baseURL:getBaseUrl()
+    baseURL:getBaseUrl(),
 })
