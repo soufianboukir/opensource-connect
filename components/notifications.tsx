@@ -35,7 +35,7 @@ export default function Notifications() {
             success: () => {
                 const newNotifications = notifications.map((notification) => ({
                     ...notification,
-                    isRead: true,
+                    read: true,
                   }))
                 setNotifications(newNotifications);
                 return "Succesfully marked as read"
@@ -47,7 +47,7 @@ export default function Notifications() {
   return (
     <Popover>
         <PopoverTrigger asChild>
-            <button  className="relative duration-200">
+            <button className="relative duration-200">
                 <Bell className="cursor-pointer w-6 h-6" />
                 {
                     notifications.some((notification) => !notification.read) ?
@@ -62,7 +62,7 @@ export default function Notifications() {
             className="w-96 p-0 rounded-xl shadow-lg border border-gray-100 dark:border-gray-800"
             align="end"
         >
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 p-4 rounded-t-xl border-b border-gray-100 dark:border-gray-800">
+            <div className="bg-gradient-to-r from-white to-blue-50 dark:from-black/10 dark:to-black/80 p-4 rounded-t-xl border-b border-gray-100 dark:border-gray-800">
                 <div className="flex items-center justify-between">
                     <h4 className="text-sm font-semibold">Notifications</h4>
                     <span className="text-xs text-blue-600 dark:text-blue-400 cursor-pointer hover:underline" onClick={markAllAsRead}>
@@ -76,9 +76,9 @@ export default function Notifications() {
                         key={idx}
                         className={cn(
                         "p-4 border-b cursor-pointer border-gray-200 dark:border-gray-800 transition-all duration-300",
-                        "hover:bg-gray-50 dark:hover:bg-gray-800/50",
+                        "hover:bg-gray-50 dark:hover:bg-black/50",
                         "flex items-start gap-4",
-                        !notification.read && "bg-blue-50/50 dark:bg-blue-900/10"
+                        !notification.read && "bg-blue-50/50 dark:bg-black/30"
                         )}
                     >
 
@@ -114,7 +114,7 @@ export default function Notifications() {
                 ))}
 
             </div>
-            <div className="p-3 text-center bg-gray-50 dark:bg-gray-900/50 rounded-b-xl">
+            <div className="p-3 text-center bg-gray-50 dark:bg-black/50 rounded-b-xl">
                 <span className="text-xs text-blue-600 dark:text-blue-400 cursor-pointer hover:underline">
                     <Link href={'/notifications'}>
                         View all notifications

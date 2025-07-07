@@ -60,9 +60,10 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, trigger }) {
       if (user) {
         token.id = user.id;
+        token.username = user.username;
         token.name = user.name;
         token.email = user.email;
-        token.image = user.avatarUrl! || user.image!;
+        token.image = user.avatarUrl!;
       }
 
       if (trigger === "update" || token.email) {
@@ -70,16 +71,12 @@ export const authOptions: NextAuthOptions = {
         const dbUser = await User.findOne({ email: token.email });
 
         if (dbUser) {
-          if (dbUser.plan === "pro" && dbUser.planExpiresAt && new Date() > dbUser.planExpiresAt) {
-            dbUser.plan = "free";
-            dbUser.planExpiresAt = undefined;
-            await dbUser.save();
-          }
 
           token.id = dbUser._id.toString();
           token.name = dbUser.name;
           token.email = dbUser.email;
-          token.image = dbUser.picture;
+          token.image = dbUser.avatarUrl;
+          token.username = dbUser.username;
         }
       }
 
@@ -92,6 +89,7 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token.name as string;
         session.user.email = token.email as string;
         session.user.image = token.image as string;
+        session.user.username = token.username as string; 
       }
       return session;
     },
@@ -104,7 +102,6 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
   },
-
   secret: process.env.NEXTAUTH_SECRET,
 };
 

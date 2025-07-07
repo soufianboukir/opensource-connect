@@ -19,9 +19,9 @@ export const SiteHeader = ({title}: {title: string}) => {
                     <span className="text-xl font-semibold">{title}</span>
                 </div>
 
-                <div className='flex gap-2 items-center'>
-                    <ModeToggle /> 
+                <div className='flex gap-4 items-center'>
                     <Notifications />
+                    <ModeToggle /> 
                 </div>
             </header>
         </div>
