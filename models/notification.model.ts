@@ -22,5 +22,5 @@ const notificationSchema = new Schema<INotification>({
 });
 
 
-const Notification = mongoose.models.User || mongoose.model<INotification>('User', notificationSchema);
+const Notification = mongoose.models.Notification || mongoose.model<INotification>('Notification', notificationSchema);
 export default Notification;

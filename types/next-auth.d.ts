@@ -16,6 +16,11 @@ declare module "next-auth" {
     email: string;
     avatarUrl?: string;
   }
+
+  interface Profile{
+    picture: string;
+    avatar_url: string;
+  }
 }
 
 declare module "next-auth/jwt" {
@@ -27,3 +32,4 @@ declare module "next-auth/jwt" {
     avatarUrl?: string;
   }
 }
+

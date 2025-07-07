@@ -1,9 +1,9 @@
 import { dbConnection } from "@/config/db";
-import Notification from "@/models/notification.model";
 import User from "@/models/user.model";
-import NextAuth, { Account, NextAuthOptions, Profile } from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
+import Notification from "@/models/notification.model";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -18,43 +18,43 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
-    async signIn({
-      account,
-      profile,
-    }: {
-      account: Account | null;
-      profile?: Profile | undefined;
-    }): Promise<boolean | string> {
-      if (!account || !profile || !profile.email) return false;
-
+    async signIn({ account, profile }) {
+      if (!account || !profile?.email) return false;
+    
       await dbConnection();
-
       const email = profile.email;
-      const existingUser = await User.findOne({ email });
-
-      if (existingUser) {
-        if (existingUser.password && existingUser.password !== "") {
-          return `/login?error=AccountExists&email=${encodeURIComponent(email)}`;
+      let user = await User.findOne({ email });
+      console.log('google profile: ',profile);
+      
+      if (user) {
+        if (account.provider === "github") {
+          user.username = (profile as any).login;
+        } else if (account.provider === "google") {
+          user.username = profile.email?.split("@")[0];
         }
-        return true;
-      } else {
-        const name = profile.name || "New User";
-        const picture = profile.image;
 
-        const newUser = await User.create({
-            name,
-            email,
-            avatarUrl: picture,
-        });
-
-        await Notification.create({
-          user: newUser._id,
-          type: "system",
-          message: `🎉 Welcome aboard, ${newUser.name}! We're excited to have you with us.`,
-        });
-
+        user.avatarUrl = profile.image || user.avatarUrl;
+        user.name = profile.name || user.name;
+        await user.save();
         return true;
       }
+
+      user = await User.create({
+        name: profile.name,
+        email,
+        avatarUrl: profile.picture || profile.avatar_url,
+        username: account.provider === "github"
+          ? (profile as any).login
+          : profile.email?.split("@")[0],
+      });
+
+      await Notification.create({
+        user: user._id,
+        type: "system",
+        message: `🎉 Welcome aboard, ${user.name}!`,
+      });
+
+      return true;
     },
 
     async jwt({ token, user, trigger }) {
