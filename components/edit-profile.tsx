@@ -213,7 +213,7 @@ export function EditProfile({user} : {user: IUser}) {
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit" disabled={isLoading} className="bg-blue-600 dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-700">
+            <Button type="submit" disabled={isLoading} className="bg-blue-600 text-white hover:bg-blue-700">
                 {
                     isLoading ? 
                         "Saving..."

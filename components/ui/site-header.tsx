@@ -4,6 +4,7 @@ import { SidebarTrigger } from './sidebar'
 import { Separator } from '@radix-ui/react-separator'
 import { ModeToggle } from './theme-toggle'
 import Notifications from '../notifications'
+import { ProjectForm } from '../project-form'
 
 
 export const SiteHeader = ({title}: {title: string}) => {
@@ -20,6 +21,7 @@ export const SiteHeader = ({title}: {title: string}) => {
                 </div>
 
                 <div className='flex gap-4 items-center'>
+                    <ProjectForm />
                     <Notifications />
                     <ModeToggle /> 
                 </div>

@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/authOptions'
 import { dbConnection } from '@/config/db'
 import Notification from '@/models/notification.model'
+import { auth } from '@/auth'
 
 export async function GET(req: NextRequest) {
     await dbConnection()
-    const session = await getServerSession(authOptions)
+    const session = await auth()
 
     if (!session || !session.user?.id) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
