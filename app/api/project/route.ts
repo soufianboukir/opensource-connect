@@ -24,7 +24,7 @@ export async function GET() {
                                     .sort({ createdAt: -1 })
                                     .lean();
 
-        return NextResponse.json(projects, { status: 200 });
+        return NextResponse.json(projects);
     } catch (error) {
         return NextResponse.json(
             { error: "Failed to fetch projects", details: error },

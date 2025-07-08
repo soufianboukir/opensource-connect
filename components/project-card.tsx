@@ -1,7 +1,7 @@
 import { Project } from '@/interfaces'
 import React from 'react'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu'
-import { Activity, Archive, Clock, Ellipsis, Link, Pencil, PlayCircle, Trash2, Users } from 'lucide-react'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu'
+import { Activity, Archive, Clock, Ellipsis, Link, Pencil, Trash2, Users } from 'lucide-react'
 import { capitalizeFirst } from '@/functions'
 import { Icon } from "@iconify/react";
 
@@ -26,25 +26,26 @@ export const ProjectCard = ({ projectData }: { projectData: Project }) => {
         }
     };
 
+    
     return (
         
-        <div className='group relative overflow-hidden dark:bg-muted/20 px-6 py-4 rounded-md hover:shadow-lg transition-all duration-300 border border-muted hover:border-primary/30'>
+        <div className='group relative overflow-hidden dark:bg-muted/20 px-6 py-4 rounded-md hover:shadow-lg transition-all duration-300 border dark:border-muted dark:hover:border-white/20 hover:border-primary/30 bg-gray-100 border-gray-200'>
             <div className='flex justify-between items-start gap-4'>
                 <div className='flex-1'>
                     <div className='flex flex-col'>
-                        <h3 className='text-xl font-bold tracking-tight group-hover:text-primary transition-colors'>
+                        <h3 className='text-lg font-bold tracking-tight group-hover:text-primary transition-colors leading-relaxed line-clamp-1'>
                             {projectData.title || "Untitled Project"}
                         </h3>
-                        {projectData.url && (
+                        {projectData.githubUrl && (
                             <a 
-                                href={projectData.url} 
+                                href={projectData.githubUrl} 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1.5 mt-1 w-fit"
                             >
                                 <Link className='w-4 h-4' />
                                 <span className="truncate max-w-[200px]">
-                                    {projectData.url.replace(/^https?:\/\//, '')}
+                                    {projectData.githubUrl.replace(/^https?:\/\//, '')}
                                 </span>
                             </a>
                         )}
@@ -75,25 +76,52 @@ export const ProjectCard = ({ projectData }: { projectData: Project }) => {
             </div>
 
             {projectData.description && (
-                <div className='mt-3'>
-                    <p className='text-muted-foreground leading-relaxed'>
-                        {projectData.description}
+                <div className="mt-3">
+                    <p className="text-muted-foreground leading-relaxed line-clamp-3">
+                    {projectData.description}
                     </p>
                 </div>
             )}
 
-            {projectData.technologies && projectData.technologies.length > 0 && (
+
+
+            {projectData.techStackNeeded && projectData.techStackNeeded.length > 0 && (
                 <div className='mt-4'>
                     <div className="flex flex-wrap gap-2">
-                        {projectData.technologies.map((tech: string, index: number) => (
+                        {projectData.techStackNeeded.slice(0, 5).map((tech: string, index: number) => (
                             <span
                                 key={index}
-                                className="px-3 py-1.5 text-xs rounded-full bg-muted text-muted-foreground border border-border hover:border-primary/50 flex items-center gap-2 transition-colors"
+                                className="px-3 py-1.5 text-xs rounded-full bg-muted text-muted-foreground border border-border flex items-center gap-2 transition-colors"
                             >
                                 <Icon icon={`devicon:${tech.toLowerCase()}`} className="w-4 h-4" />
                                 {capitalizeFirst(tech)}
                             </span>
                         ))}
+                        {projectData.techStackNeeded.length > 5 && (
+                            <span className="px-3 py-1.5 text-xs rounded-full bg-muted/50 text-muted-foreground border border-border flex items-center">
+                                +{projectData.techStackNeeded.length - 5}
+                            </span>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {projectData.tags && projectData.tags.length > 0 && (
+                <div className='mt-4'>
+                    <div className="flex flex-wrap gap-2">
+                        {projectData.tags.slice(0, 5).map((tag: string, index: number) => (
+                            <span
+                                key={index}
+                                className="text-muted-foreground gap-2 transition-colors"
+                            >
+                                {tag.startsWith('#') ? tag : `#${tag}`}
+                            </span>
+                        ))}
+                        {projectData.tags.length > 5 && (
+                            <span className="text-muted-foreground flex items-center">
+                                +{projectData.tags.length - 5}
+                            </span>
+                        )}
                     </div>
                 </div>
             )}

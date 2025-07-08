@@ -22,5 +22,7 @@ export interface Project{
     status: "active" | "archived" | "in progress",
     techStackNeeded: string[],
     rolesNeeded: { role: string; count: number }[],
-    tags: string[]
+    tags: string[];
+    createdAt?: string;
+    updatedAt?: string;
 }
