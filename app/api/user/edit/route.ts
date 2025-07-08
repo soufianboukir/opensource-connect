@@ -58,10 +58,16 @@ export async function POST(req: NextRequest) {
 
     if (techStackRaw) {
       try {
-        user.techStack.push(techStackRaw)
+        const parsedTechStack = JSON.parse(techStackRaw as string);
+    
+        if (!Array.isArray(parsedTechStack)) {
+          throw new Error("Invalid format");
+        }
+    
+        user.techStack = parsedTechStack;
       } catch {
         return NextResponse.json(
-          { error: "Invalid techStack format, must be JSON array" },
+          { error: "Invalid techStack format, must be a JSON array" },
           { status: 400 }
         );
       }
@@ -71,11 +77,11 @@ export async function POST(req: NextRequest) {
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
 
-      const tempFilePath = join("/tmp", `${randomUUID()}.jpg`);
+      const tempFilePath = join('/tmp', `${randomUUID()}.jpg`);
       await writeFile(tempFilePath, buffer);
 
       const uploadResult = await cloudinary.uploader.upload(tempFilePath, {
-        folder: "user_profiles",
+          folder: 'user_profiles',
       });
 
       user.avatarUrl = uploadResult.secure_url;

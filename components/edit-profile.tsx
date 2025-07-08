@@ -34,29 +34,20 @@ export function EditProfile({user} : {user: IUser}) {
         experienceLevel: user.experienceLevel || '',
         techStack: user.techStack || [] as string[],
         avatar: null as File | null,
-    });
-
-    console.log(user);
-    
+    });    
       
     
     const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-      ) => {
-        const { name, value, type, checked, files } = e.target;
-      
-        setFormData((prev) => ({
-          ...prev,
-          [name]:
-            type === 'checkbox'
-              ? checked
-              : type === 'file'
-              ? files?.[0] || null
-              : value,
-        }));
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    ) => {
+      const { name, value, type, files } = e.target;
+    
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === 'file' ? files?.[0] || null : value,
+      }));
     };
-      
-
+    
     const handleTechAdd = (tech: string) => {
         setFormData((prev) => {
             if (prev.techStack.includes(tech)) return prev;
@@ -78,15 +69,27 @@ export function EditProfile({user} : {user: IUser}) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true)
+        const fd = new FormData()
+        fd.append('name',formData.name)
+        fd.append('username',formData.username)
+        fd.append('bio',formData.bio)
+        fd.append('headLine',formData.headLine)
+        fd.append('githubUrl',formData.githubUrl)
+        fd.append('websiteUrl',formData.websiteUrl)
+        fd.append('openToWork',formData.openToWork.toString())
+        fd.append('experienceLevel',formData.experienceLevel)
+        fd.append("techStack", JSON.stringify(formData.techStack));
+        if(formData.avatar){
+          fd.append("image", formData.avatar);
+        }
 
-        console.log(formData)
         try{
-            // const response = await updateProfile(formData)
-            // console.log(response);
-            // if(response.status === 200){
-            //     toast.success("Profile data updated successfully")
-            //     await update()
-            // }
+            const response = await updateProfile(fd)
+            if(response.status === 200){
+                toast.success("Profile data updated successfully")
+                await update()
+                window.location.reload();
+            }
             
         }catch{
             toast.error('Failed to update profile data')
@@ -134,6 +137,7 @@ export function EditProfile({user} : {user: IUser}) {
                 <Label htmlFor="avatar">Avatar Image</Label>
                 <Input
                   id="avatar"
+                  name="avatar"
                   type="file"
                   accept="image/*"
                   onChange={handleChange} className="mt-2"
@@ -153,7 +157,10 @@ export function EditProfile({user} : {user: IUser}) {
 
               <div>
                 <Label className="mb-2 block">Experience Level</Label>
-                <Select value={formData.experienceLevel} onValueChange={handleChange}>
+                <Select value={formData.experienceLevel} 
+                onValueChange={(value: 'junior' | 'mid' | 'senior' | 'lead') =>
+                  setFormData((prev) => ({ ...prev, experienceLevel: value }))
+                }>
                   <SelectTrigger>
                     <SelectValue placeholder="Select level" />
                   </SelectTrigger>
@@ -171,7 +178,9 @@ export function EditProfile({user} : {user: IUser}) {
                 <Switch
                   id="openToWork"
                   checked={formData.openToWork}
-                  onCheckedChange={handleChange}
+                  onCheckedChange={(checked) =>
+                    setFormData((prev) => ({ ...prev, openToWork: checked }))
+                  }
                 />
               </div>
 

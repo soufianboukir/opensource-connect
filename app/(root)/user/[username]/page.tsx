@@ -40,10 +40,11 @@ export default async function UserProfile({ params }: UserProfileProps) {
           <div className="relative mb-8">
             <div className="w-full h-32 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-800" />
             <div className="absolute left-1/2 -bottom-16 transform -translate-x-1/2">
-              <Avatar className="h-32 w-32 border-4 border-background shadow-lg">
+              <Avatar className="h-32 w-32 border-4 border-background shadow-lg object-cover">
                 <AvatarImage
                   src={user.avatarUrl || ""}
                   alt={user.name || "User Avatar"}
+                  
                 />
                 <AvatarFallback className="text-xl font-semibold bg-muted text-muted-foreground">
                   {user.name?.charAt(0)}
@@ -61,11 +62,17 @@ export default async function UserProfile({ params }: UserProfileProps) {
             </p>
 
             <div className="flex items-center justify-center gap-3 mt-6">
-              <span className="dark:bg-white bg-black dark:text-black text-white px-3 rounded-xl">Senior</span>
-              <span className="bg-green-600 text-white px-3 py-0.5 rounded-xl">Open to work</span>
+              <span className="dark:bg-white font-semibold bg-black dark:text-black text-white px-3 rounded-xl">{user.experienceLevel}</span>
+              <span
+                className={`px-3 py-0.5 rounded-xl text-white text-sm font-medium ${
+                  user.openToWork ? 'bg-green-600' : 'bg-gray-500'
+                }`}
+              >
+                {user.openToWork ? 'Open to work' : 'Not available for work'}
+              </span>
             </div>
 
-            <div className="flex items-center justify-center gap-10 mt-6">
+            <div className="flex items-center md:flex-row flex-col justify-center gap-10 mt-6">
               <span className="flex items-center gap-2 font-semibold justify-center">
                 <Cake  className="w-6 h-6"/> 
                 <span>
@@ -110,7 +117,7 @@ export default async function UserProfile({ params }: UserProfileProps) {
 
             <div className="mt-6 space-y-2 text-sm text-muted-foreground">
               <div className="flex flex-wrap justify-center gap-2 mt-4 max-w-2xl mx-auto">
-                {['nodejs','nextjs','python','nestjs','mysql','postgresql','javascript','typescript','csharp','cpp','aspnet','django','laravel','mern','linux'].map((tech: string, index: number) => (
+                {user.techStack && user.techStack.length > 0 && user.techStack.map((tech: string, index: number) => (
                   <span
                     key={index}
                     className="px-3 py-1 text-sm rounded-full bg-muted text-muted-foreground border border-border flex items-center gap-2"
