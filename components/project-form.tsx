@@ -116,6 +116,7 @@ export function ProjectForm({ projectData, open, onOpenChange, onUpdate }: Proje
       if(open){
         response = await updateProject(formData,projectData?._id);
         if(response.status === 200){
+          onOpenChange({open:false, projectData: {title:'',description:'',githubUrl:'',websiteUrl:'',status:'active',tags:[],rolesNeeded:[],techStackNeeded:[]} })
           onUpdate(response.data.updatedProject)
           toast.success('Project data updated successfully')
         }

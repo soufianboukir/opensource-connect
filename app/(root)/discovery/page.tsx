@@ -2,6 +2,8 @@
 
 import { AppSidebar } from "@/components/app-sidebar"
 import Loading from "@/components/loading"
+import { ProjectFilters } from "@/components/project-filters"
+import { ProjectPreview } from "@/components/project-preview"
 
 import {
   SidebarInset,
@@ -21,14 +23,15 @@ export default function Page() {
             <AppSidebar />
             <SidebarInset>
                 <SiteHeader title="Discovery" />
-                {/* <div className="flex flex-1 flex-col gap-4 p-4">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="bg-muted/50 aspect-video rounded-xl" />
-                    <div className="bg-muted/50 aspect-video rounded-xl" />
-                    <div className="bg-muted/50 aspect-video rounded-xl" />
+                <div className="flex p-4 gap-4">
+                  <div className="md:w-[75%] w-[100%]">
+                    <ProjectPreview />
+                    <ProjectPreview />
+                    <ProjectPreview />
+                  </div>
+                  <ProjectFilters />
                 </div>
-                <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
-                </div> */}
+
             </SidebarInset>
         </SidebarProvider>
   )

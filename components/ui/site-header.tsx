@@ -9,23 +9,20 @@ import { ProjectForm } from '../project-form'
 
 export const SiteHeader = ({title}: {title: string}) => {
     return (
-        <div>
-            <header className="flex justify-between h-16 shrink-0 items-center gap-2 border-b px-4">
-                <div className='flex items-center'>
+        <header className="sticky top-0 z-50 h-16 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="container flex h-16 items-center justify-between px-4">
+                <div className="flex items-center">
                     <SidebarTrigger className="-ml-1" />
-                    <Separator
-                        orientation="vertical"
-                        className="mr-2 data-[orientation=vertical]:h-4"
-                    />
+                    <Separator orientation="vertical" className="mr-2 h-4" />
                     <span className="text-xl font-semibold">{title}</span>
                 </div>
 
-                <div className='flex gap-4 items-center'>
+                <div className="flex items-center gap-4">
                     <ProjectForm />
                     <Notifications />
-                    <ModeToggle /> 
+                    <ModeToggle />
                 </div>
-            </header>
-        </div>
+            </div>
+        </header>
     )
 }
