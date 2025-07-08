@@ -10,3 +10,13 @@ export const getProjects = async () =>{
     const response = await api.get(`/project`);
     return response;
 }
+
+export const updateProject = async (formdata: Project,projectId?: string) =>{
+    const response = await api.put(`/project/${projectId}`,formdata);
+    return response;
+}
+
+export const deleteProject = async (projectId: string) =>{
+    const response = await api.delete(`/project/${projectId}`);
+    return response;
+}

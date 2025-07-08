@@ -1,6 +1,7 @@
 'use client'
 
 import { AppSidebar } from "@/components/app-sidebar"
+import { DeleteProject } from "@/components/delete-project"
 import { EmptyState } from "@/components/empty-state"
 import Loading from "@/components/loading"
 import { ProjectCard } from "@/components/project-card"
@@ -19,13 +20,32 @@ import { toast } from "sonner"
 export default function Page() {
   const [isLoading,setIsLoading] = useState<boolean>(true);
   const [projects,setProjects] = useState<Project[]>([]);
-  
+  const [deleteProject,setDeleteProject] = useState({
+    open: false,
+    projectId: ''
+  })
+  const [updateProject,setUpdateProject] = useState<{
+    open: boolean;
+    projectData: Project;
+  }>({
+    open: false,
+    projectData: {
+      title: '',
+      description: '',
+      githubUrl: '',
+      websiteUrl: '', 
+      status: 'active',
+      techStackNeeded: [],
+      rolesNeeded: [],
+      tags: []
+    },
+  })
+
+
   const fetchUserProjects = async () =>{
     setIsLoading(true)
     try{
-      const response = await getProjects();
-      console.log(response);
-      
+      const response = await getProjects();      
       if(response.status === 200){
         setProjects(response.data)
       }
@@ -40,6 +60,16 @@ export default function Page() {
     fetchUserProjects()
   },[])
 
+  const onUpdate = (projectData: Project) =>{
+    const newProjects = projects.map((project) => project._id === projectData._id ? projectData : project);
+    setProjects(newProjects);
+  }
+
+  const onDelete = (projectId: string) =>{
+    const newProjects = projects.filter((project) => project._id !== projectId);
+    setProjects(newProjects);
+  }
+
 
   return (
     <SidebarProvider>
@@ -50,7 +80,7 @@ export default function Page() {
           {
             !isLoading && projects && projects.length ? (
               projects.map((project,index) => (
-                <ProjectCard key={index} projectData={project} />
+                <ProjectCard key={index} projectData={project} onOpenDelete={setDeleteProject} onOpenUpdate={setUpdateProject}/>
               ))
             ) : null
           }
@@ -64,6 +94,12 @@ export default function Page() {
           !isLoading && projects.length === 0 && (
             <EmptyState message="No projects was found" description="Get started by creating your first project" action={<ProjectForm />}/>
           )
+        }
+        {
+          deleteProject.open && <DeleteProject projectId={deleteProject.projectId} open={deleteProject.open} onOpenChange={setDeleteProject} onDelete={onDelete}/>
+        }
+        {
+          updateProject.open && <ProjectForm projectData={updateProject.projectData} open={updateProject.open} onOpenChange={setUpdateProject} onUpdate={onUpdate}/>
         }
       </SidebarInset>
     </SidebarProvider>

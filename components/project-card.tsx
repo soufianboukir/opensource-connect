@@ -1,34 +1,36 @@
+'use client'
+
 import { Project } from '@/interfaces'
 import React from 'react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu'
 import { Activity, Archive, Clock, Ellipsis, Link, Pencil, Trash2, Users } from 'lucide-react'
 import { capitalizeFirst } from '@/functions'
 import { Icon } from "@iconify/react";
+import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
 
-export const ProjectCard = ({ projectData }: { projectData: Project }) => {
+export const ProjectCard = ({ projectData, onOpenDelete, onOpenUpdate }:
+     { projectData: Project, onOpenDelete: (val: { open: boolean, projectId: string }) => void ,
+     onOpenUpdate: (val: { open: boolean, projectData: Project }) => void}) => {
+
     const { status } = projectData;
-    
+
     const statusIndicator = {
         "in progress": {
             icon: <Clock className="w-4 h-4 text-yellow-500" />,
-            bg: "bg-gray-500/10",
-            text: "text-gray-500"
+            description: "This project is currently in progress and being actively worked on."
         },
         "archived": {
             icon: <Archive className="w-4 h-4 text-gray-500" />,
-            bg: "bg-gray-500/10",
-            text: "text-gray-500"
+            description: "This project has been archived and is no longer active."
         },
         "active": {
             icon: <Activity className="w-4 h-4 text-green-500" />,
-            bg: "bg-gray-500/10",
-            text: "text-gray-500"
+            description: "This project is live and available for interaction or updates.",
         }
     };
 
     
     return (
-        
         <div className='group relative overflow-hidden dark:bg-muted/20 px-6 py-4 rounded-md hover:shadow-lg transition-all duration-300 border dark:border-muted dark:hover:border-white/20 hover:border-primary/30 bg-gray-100 border-gray-200'>
             <div className='flex justify-between items-start gap-4'>
                 <div className='flex-1'>
@@ -53,8 +55,17 @@ export const ProjectCard = ({ projectData }: { projectData: Project }) => {
                 </div>
 
                 <div className='flex gap-2 items-center'>
-                    <div className='w-9 h-9 rounded-full border-3 border-muted flex justify-center items-center shadow-sm'>
-                        {statusIndicator[status]?.icon}
+                    <div className='w-9 h-9 rounded-full border-3 dark:border-muted flex justify-center items-center shadow-sm border-gray-300'>
+                        <Tooltip>
+                            <TooltipTrigger>
+                                {statusIndicator[status]?.icon}
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>
+                                    {statusIndicator[status]?.description}
+                                </p>
+                            </TooltipContent>
+                        </Tooltip>
                     </div>
 
                     <DropdownMenu>
@@ -62,11 +73,11 @@ export const ProjectCard = ({ projectData }: { projectData: Project }) => {
                             <Ellipsis className='text-muted-foreground hover:text-foreground'/>    
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="min-w-[180px]" align="end">
-                            <DropdownMenuItem className="gap-2">
+                            <DropdownMenuItem className="gap-2" onClick={() => onOpenUpdate({open: true, projectData: projectData})}>
                                 <Pencil className="w-4 h-4" />
                                 Edit Project
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="gap-2 text-red-500 focus:text-red-500">
+                            <DropdownMenuItem className="gap-2 text-red-500 focus:text-red-500" onClick={() => onOpenDelete({open:true,projectId: projectData._id!})}>
                                 <Trash2 className="w-4 h-4" />
                                 Delete
                             </DropdownMenuItem>

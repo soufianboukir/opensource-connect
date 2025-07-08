@@ -19,26 +19,33 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Trash2, Plus, XIcon } from "lucide-react";
 import { toast } from "sonner";
 import { SelectTech } from "./select-tech";
-import { addProject } from "@/services/project";
+import { addProject, updateProject } from "@/services/project";
 import { Project } from "@/interfaces";
 
-export function ProjectForm() {
+type ProjectFormProps = {
+  projectData?: Project;
+  open?: boolean
+  onOpenChange?: (val: { open: boolean, projectData: Project }) => void
+  onUpdate?: (projectData: Project) => void
+}
+
+export function ProjectForm({ projectData, open, onOpenChange, onUpdate }: ProjectFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<Project>({
-    title: "",
-    description: "",
-    githubUrl: "",
-    websiteUrl: "",
-    status: "active" as "active" | "archived" | "in progress",
-    techStackNeeded: [] as string[],
-    rolesNeeded: [] as { role: string; count: number }[],
-    tags: [] as string[],
+    title: projectData?.title || "",
+    description: projectData?.description || "",
+    githubUrl: projectData?.githubUrl || "",
+    websiteUrl: projectData?.websiteUrl || "",
+    status: projectData?.status || "active" as "active" | "archived" | "in progress",
+    techStackNeeded: projectData?.techStackNeeded || [] as string[],
+    rolesNeeded: projectData?.rolesNeeded || [] as { role: string; count: number }[],
+    tags: projectData?.tags || [] as string[],
   });
 
   const [roleInput, setRoleInput] = useState("");
   const [roleCount, setRoleCount] = useState(1);
   const [tagInput, setTagInput] = useState("");
-
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -99,11 +106,21 @@ export function ProjectForm() {
     setIsLoading(true);
 
     try {
-      const response = await addProject(formData);
-      if(response.status === 200){
-        toast.success('New Project submitted successfully')
+      let response ;
+      if(!open){
+        response = await addProject(formData);
+        if(response.status === 200){
+          toast.success('New Project submitted successfully')
+        }
       }
-      console.log(response);
+      if(open){
+        response = await updateProject(formData,projectData?._id);
+        if(response.status === 200){
+          onUpdate(response.data.updatedProject)
+          toast.success('Project data updated successfully')
+        }
+      }
+      
       
     } catch {
       toast.error("Failed to create project");
@@ -113,17 +130,33 @@ export function ProjectForm() {
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className="bg-blue-600 flex items-center gap-2 rounded-xl px-4 py-2 text-white font-semibold hover:bg-blue-700">
-          <Plus className="w-4 h-4" /> Submit a project
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={() => onOpenChange?.({ open: false, projectData: {title:'',description:'',githubUrl:'',websiteUrl:'',status:'active',tags:[],rolesNeeded:[],techStackNeeded:[]} })}>
+      {
+        !open && (
+          <DialogTrigger asChild>
+            <Button className="bg-blue-600 flex items-center gap-2 rounded-xl px-4 py-2 text-white font-semibold hover:bg-blue-700">
+              <Plus className={`w-4 h-4 ${open ? 'hidden' : null}`} /> Submit a project
+            </Button>
+          </DialogTrigger>
+        )
+      }
       <DialogContent className="sm:max-w-4xl overflow-auto max-h-[800px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Submit a new project</DialogTitle>
-            <DialogDescription>Share a project and find contributors.</DialogDescription>
+            <DialogTitle>
+              {
+                !open ?
+                  "Submit a new project"
+                  : "Edit project data"
+              }
+            </DialogTitle>
+            <DialogDescription>
+              {
+                !open ? 
+                  "Share a project and find contributors."
+                : "Update your project data"
+              }
+            </DialogDescription>
           </DialogHeader>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-6">
@@ -155,8 +188,6 @@ export function ProjectForm() {
             </div>
 
             <div className="flex flex-col gap-4 w-[100%]">
-             
-
               <Label>Tech Stack Needed *</Label>
               <div className="flex flex-wrap gap-2 mt-2">
                 <SelectTech onTechAdd={handleTechAdd} />
@@ -222,7 +253,6 @@ export function ProjectForm() {
                         </div>
                     ))}
                 </div>
-
             </div>
           </div>
 
@@ -230,9 +260,11 @@ export function ProjectForm() {
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit" disabled={isLoading} className="bg-blue-600 text-white hover:bg-blue-700">
-              {isLoading ? "Submitting..." : "Submit Project"}
-            </Button>
+              <Button type="submit" disabled={isLoading} className="bg-blue-600 text-white hover:bg-blue-700">
+                {isLoading
+                  ? projectData ? "Saving..." : "Submitting..."
+                  : projectData ? "Save changes" : "Submit project"}
+              </Button>
           </DialogFooter>
         </form>
       </DialogContent>
