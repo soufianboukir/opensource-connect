@@ -1,5 +1,4 @@
 import { Icon } from "@iconify/react";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
@@ -13,10 +12,29 @@ import { capitalizeFirst } from "@/functions";
 import { Cake, Earth, Github } from "lucide-react";
 import Link from "next/link";
 import { EditProfile } from "@/components/edit-profile";
+import { Metadata } from "next";
 
 interface UserProfileProps {
   params: {
     username: string;
+  };
+}
+
+
+export async function generateMetadata({ params }: UserProfileProps): Promise<Metadata> {
+  await dbConnection();
+  const user: IUser | null = await User.findOne({ username: params.username }).lean();
+
+  if (!user) {
+    return {
+      title: "User Not Found",
+      description: "No user profile found for this username.",
+    };
+  }
+
+  return {
+    title: `${user.username} (${user.name})`,
+    description: `Explore ${user.name}'s porfolio on our platform.`,
   };
 }
 
@@ -36,7 +54,6 @@ export default async function UserProfile({ params }: UserProfileProps) {
         <SiteHeader title={`${user.name}'s Profile`} />
 
         <div className="p-6 md:p-6 w-[100%] mx-auto text-center">
-          {/* Banner and Avatar */}
           <div className="relative mb-8">
             <div className="w-full h-32 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-800" />
             <div className="absolute left-1/2 -bottom-16 transform -translate-x-1/2">
@@ -83,37 +100,37 @@ export default async function UserProfile({ params }: UserProfileProps) {
               </span>
               <span className="flex items-center gap-2 font-semibold justify-center">
                 {
-                  // user.websiteUrl && (
+                  user.websiteUrl && (
                     <>
                       <Earth  className="w-6 h-6"/> 
                       <Link href={"https://soufianboukir.com"} className="hover:text-blue-500">
                         {user.websiteUrl || 'https://soufianboukir.com'}
                       </Link>
                     </>
-                  // )
+                  )
                 }
               </span>
 
               <span className="flex items-center gap-2 font-semibold justify-center">
                 {
-                  // user.githubUrl && (
+                  user.githubUrl && (
                     <>
                       <Github  className="w-6 h-6"/> 
                       <Link href={"https://github.com/soufianboukir"} className="hover:text-blue-500">
                         {user.githubUrl || 'https://github.com/soufianboukir'}
                       </Link>
                     </>
-                  // )
+                  )
                 }
               </span>
             </div>
 
 
-            {/* {user.bio && ( */}
+            {user.bio && (
               <p className="text-muted-foreground mt-6 max-w-xl mx-auto">
                 {user?.bio || "I enjoy turning ideas into fast, simple, and useful experiences. Here you'll find fragments of my curiosity, experiments, and ambition — written in code, shaped by open source, and shared with intention. Available for open-source projects using Express.js, TypeScript, Next.js, or React — happy to collaborate!"}
               </p>
-            {/* )} */}
+            )}
 
             <div className="mt-6 space-y-2 text-sm text-muted-foreground">
               <div className="flex flex-wrap justify-center gap-2 mt-4 max-w-2xl mx-auto">

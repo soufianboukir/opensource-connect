@@ -21,7 +21,7 @@ import { IUser } from "@/models/user.model";
 
 export function EditProfile({user} : {user: IUser}) {
     const [isLoading,setIsLoading] = useState(false);
-    const { data:session,update } = useSession()
+    const { update } = useSession()
 
     const [formData, setFormData] = useState({
         name: user.name || '',
