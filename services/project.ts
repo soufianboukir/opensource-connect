@@ -20,3 +20,13 @@ export const deleteProject = async (projectId: string) =>{
     const response = await api.delete(`/project/${projectId}`);
     return response;
 }
+
+export const toggleSave = async (projectId: string) =>{
+    const response = await api.post(`/project/save-unsave/${projectId}`);
+    return response;
+}
+
+export const getSavedProjects = async () =>{
+    const response = await api.get(`/project/saved`);
+    return response;
+}

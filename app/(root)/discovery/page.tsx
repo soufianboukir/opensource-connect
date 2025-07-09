@@ -14,9 +14,9 @@ import {
 } from "@/components/ui/sidebar"
 import { SiteHeader } from "@/components/ui/site-header"
 
-import axios from 'axios'
 import { Project } from '@/interfaces'
 import { EmptyState } from '@/components/empty-state'
+import { api } from '@/config/api'
 
 
 export default function Page() {
@@ -46,7 +46,7 @@ export default function Page() {
         params.append('page',page.toString())
         if (filters.sort) params.append('sort', filters.sort)
 
-        const response = await axios.get(`/api/discovery?${params.toString()}`)
+        const response = await api.get(`/discovery?${params.toString()}`)
         setProjects(prev => page === 1 ? response.data.projects : [...prev, ...response.data.projects])
         setTotalProjects(response.data.total);
         
@@ -74,7 +74,7 @@ export default function Page() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [loading, projects.length, totalProjects]);
   
-  const handleFilterChange = (newFilters) => {
+  const handleFilterChange = (newFilters: any) => {
     const isDifferent =
       newFilters.status !== filters.status ||
       newFilters.sort !== filters.sort ||

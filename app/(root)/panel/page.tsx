@@ -6,7 +6,6 @@ import { EmptyState } from "@/components/empty-state"
 import Loading from "@/components/loading"
 import { ProjectCard } from "@/components/project-card"
 import { ProjectForm } from "@/components/project-form"
-
 import {
   SidebarInset,
   SidebarProvider,

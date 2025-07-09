@@ -7,23 +7,33 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Project } from "@/interfaces"
 import Link from "next/link"
 import { Link as LucideLink } from 'lucide-react'
+import { toast } from "sonner"
+import { toggleSave } from "@/services/project"
 
 export function ProjectPreview({projectData} : {projectData: Project}) {
 
-  const statusIndicator = {
-    "in progress": {
-      icon: <Clock className="w-4 h-4 text-yellow-500" />,
-      description: "This project is currently in progress and being actively worked on. you can apply",
-    },
-    archived: {
-      icon: <Archive className="w-4 h-4 text-gray-500" />,
-      description: "This project has been archived and is no longer active. you cannot apply",
-    },
-    active: {
-      icon: <Activity className="w-4 h-4 text-green-500" />,
-      description: "This project is live and available for interaction or updates. you can apply",
-    },
-  }
+    const statusIndicator = {
+            "in progress": {
+            icon: <Clock className="w-4 h-4 text-yellow-500" />,
+            description: "This project is currently in progress and being actively worked on. you can apply",
+        },
+            archived: {
+            icon: <Archive className="w-4 h-4 text-gray-500" />,
+            description: "This project has been archived and is no longer active. you cannot apply",
+        },
+            active: {
+            icon: <Activity className="w-4 h-4 text-green-500" />,
+            description: "This project is live and available for interaction or updates. you can apply",
+        },
+    }
+
+    const toggleSaveProject = () =>{
+        toast.promise(toggleSave(projectData._id!),{
+            loading: 'loading...',
+            success: (response) => response.data.message,
+            error: (err) => err.response.data.message
+        })
+    }
 
   return (
     <div className="relative hover:bg-muted/10 duration-200 cursor-pointer hover:rounded-2xl border-b border-b-muted/80 p-6 transition-all hover:shadow-sm">
@@ -52,7 +62,7 @@ export function ProjectPreview({projectData} : {projectData: Project}) {
                 </Tooltip>
                 <Tooltip>
                     <TooltipTrigger>
-                        <div className="w-9 h-9 rounded-full border flex items-center justify-center bg-gray-100 dark:bg-muted/50">
+                        <div className="w-9 h-9 rounded-full border flex items-center cursor-pointer justify-center bg-gray-100 dark:bg-muted/50" onClick={toggleSaveProject}>
                             <Save className="w-4 h-4 text-gray-500 dark:text-gray-200"/>
                         </div>
                     </TooltipTrigger>
@@ -113,10 +123,21 @@ export function ProjectPreview({projectData} : {projectData: Project}) {
         </div>
 
         <div className="mt-2 pt-4 flex justify-between text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                {projectData.rolesNeeded.reduce((acc, role) => acc + role.count, 0)} roles open
-            </div>
+            <Tooltip>
+                <TooltipTrigger>
+                    <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4" />
+                        {projectData.rolesNeeded.reduce((acc, role) => acc + role.count, 0)} roles open
+                    </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                    {
+                        projectData.rolesNeeded.map((role,index) => (
+                            <p key={index}>{role.role}: {role.count}</p>
+                        ))
+                    }
+                </TooltipContent>
+            </Tooltip>
             <span>Posted {formatRelativeTime(projectData.createdAt!)}</span>
         </div>
     </div>

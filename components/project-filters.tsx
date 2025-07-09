@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import { SelectTech } from "./select-tech";
+import { usePathname } from "next/navigation";
 
 export function ProjectFilters({ onFilterChange }: { onFilterChange: (filters: {status: string, techStack: string[], roles: string[],tags:string[],sort:string}) => void }) {
     const [status, setStatus] = useState('');
@@ -14,7 +15,10 @@ export function ProjectFilters({ onFilterChange }: { onFilterChange: (filters: {
     const [tag, setTag] = useState('');
     const [tags, setTags] = useState<string[]>([]);
     const [sort, setSort] = useState('newest');
+    const pathName = usePathname();
 
+    const disableFilter = pathName !== '/discovery'
+    
     const handleApply = () => {
         onFilterChange({ status, techStack, roles, tags, sort });
     };
@@ -38,7 +42,6 @@ export function ProjectFilters({ onFilterChange }: { onFilterChange: (filters: {
 
     return (
         <div className="hidden md:block md:w-[25%] p-4 space-y-4 bg-transparent sticky top-20 h-fit">
-
             <div className="flex flex-col gap-1">
                 <Label>Status</Label>
                 <Select value={status} onValueChange={setStatus}>
@@ -128,10 +131,10 @@ export function ProjectFilters({ onFilterChange }: { onFilterChange: (filters: {
                 </Select>
             </div>
             <div className="flex flex-col">
-                <Button className="w-full mt-2 dark:bg-muted/80 bg-gray-200 hover:bg-gray-300 text-black" onClick={resetFilters}>
+                <Button className="w-full mt-2 dark:bg-muted/80 bg-gray-200 hover:bg-gray-300 text-black" onClick={resetFilters} disabled={disableFilter}>
                     Reset Filters
                 </Button>
-                <Button className="w-full mt-2 bg-blue-600 text-white dark:bg-blue-600 hover:bg-blue-700" onClick={handleApply}>
+                <Button className="w-full mt-2 bg-blue-600 text-white dark:bg-blue-600 hover:bg-blue-700" onClick={handleApply} disabled={disableFilter}>
                     Apply Filters
                 </Button>
             </div>
