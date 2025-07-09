@@ -70,17 +70,3 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
         return NextResponse.json({ error: "Failed to delete project", details: error }, { status: 500 });
     }
 }
-
-export async function GET(req: Request, { params }: { params: { id: string } }) {
-  await dbConnection();
-
-  const project = await Project.findOne({ publicId: params.id }).populate('owner', 'name username avatarUrl headLine');
-
-  if (!project) {
-    return NextResponse.json({ message: 'Project not found' }, { status: 404 });
-  }
-
-  return NextResponse.json(project);
-}
-
-  

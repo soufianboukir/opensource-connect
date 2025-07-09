@@ -16,12 +16,14 @@ export interface Notification{
 
 export interface Project{
     _id?: string;
+    publicId?: string;
     title: string,
     description: string,
     owner?:{
         name: string;
         username: string;
         avatarUrl: string;
+        headLine: string
     },
     githubUrl: string,
     websiteUrl: string,

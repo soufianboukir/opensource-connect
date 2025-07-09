@@ -3,31 +3,17 @@
 import { Project } from '@/interfaces'
 import React from 'react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu'
-import { Activity, Archive, Clock, Ellipsis, Link, Pencil, Trash2, Users } from 'lucide-react'
+import { Ellipsis, Link, Pencil, Trash2, Users } from 'lucide-react'
 import { capitalizeFirst } from '@/functions'
 import { Icon } from "@iconify/react";
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
+import { statusIndicator } from '@/constants/status-indicator'
 
 export const ProjectCard = ({ projectData, onOpenDelete, onOpenUpdate }:
      { projectData: Project, onOpenDelete: (val: { open: boolean, projectId: string }) => void ,
      onOpenUpdate: (val: { open: boolean, projectData: Project }) => void}) => {
 
     const { status } = projectData;
-
-    const statusIndicator = {
-        "in progress": {
-            icon: <Clock className="w-4 h-4 text-yellow-500" />,
-            description: "This project is currently in progress and being actively worked on."
-        },
-        "archived": {
-            icon: <Archive className="w-4 h-4 text-gray-500" />,
-            description: "This project has been archived and is no longer active."
-        },
-        "active": {
-            icon: <Activity className="w-4 h-4 text-green-500" />,
-            description: "This project is live and available for interaction or updates.",
-        }
-    };
 
     
     return (

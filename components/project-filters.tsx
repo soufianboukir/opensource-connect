@@ -1,3 +1,5 @@
+'use client'
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -7,7 +9,7 @@ import { Trash2 } from "lucide-react";
 import { SelectTech } from "./select-tech";
 import { usePathname } from "next/navigation";
 
-export function ProjectFilters({ onFilterChange }: { onFilterChange: (filters: {status: string, techStack: string[], roles: string[],tags:string[],sort:string}) => void }) {
+export function ProjectFilters({ onFilterChange }: { onFilterChange?: (filters: {status: string, techStack: string[], roles: string[],tags:string[],sort:string}) => void }) {
     const [status, setStatus] = useState('');
     const [techStack, setTechStack] = useState<string[]>([]);
     const [role, setRole] = useState('');
@@ -20,7 +22,7 @@ export function ProjectFilters({ onFilterChange }: { onFilterChange: (filters: {
     const disableFilter = pathName !== '/discovery'
     
     const handleApply = () => {
-        onFilterChange({ status, techStack, roles, tags, sort });
+        onFilterChange?.({ status, techStack, roles, tags, sort });
     };
 
     const resetFilters = () => {
@@ -37,7 +39,7 @@ export function ProjectFilters({ onFilterChange }: { onFilterChange: (filters: {
         setRoles(reset.roles)
         setTags(reset.tags)
         setSort(reset.sort)
-        onFilterChange(reset)
+        onFilterChange?.(reset)
     }
 
     return (

@@ -1,47 +1,17 @@
 'use client'
 
-import { Activity, Archive, Clock, Save, Send, Users } from "lucide-react"
+import { Users } from "lucide-react"
 import { Icon } from "@iconify/react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Project } from "@/interfaces"
 import Link from "next/link"
 import { Link as LucideLink } from 'lucide-react'
-import { toast } from "sonner"
-import { toggleSave } from "@/services/project"
+import { ProjectActions } from "./apply-save-status"
 
 export function ProjectPreview({projectData, handleUnsave} : {projectData: Project, handleUnsave?: (projectId: string) => void}) {
-
-    const statusIndicator = {
-            "in progress": {
-            icon: <Clock className="w-4 h-4 text-yellow-500" />,
-            description: "This project is currently in progress and being actively worked on. you can apply",
-        },
-            archived: {
-            icon: <Archive className="w-4 h-4 text-gray-500" />,
-            description: "This project has been archived and is no longer active. you cannot apply",
-        },
-            active: {
-            icon: <Activity className="w-4 h-4 text-green-500" />,
-            description: "This project is live and available for interaction or updates. you can apply",
-        },
-    }
-
-    const toggleSaveProject = () =>{
-        toast.promise(toggleSave(projectData._id!),{
-            loading: 'loading...',
-            success: (response) => {
-                if(!response.data.saved){
-                    handleUnsave?.(projectData._id!)
-                }
-                return response.data.message
-            },
-            error: (err) => err.response.data.message
-        })
-    }
-
   return (
-    <div className="relative hover:bg-muted/10 duration-200 cursor-pointer hover:rounded-2xl border-b border-b-muted/80 p-6 transition-all hover:shadow-sm">
+    <div className="relative hover:bg-muted/20 duration-200 cursor-pointer hover:rounded-2xl border-b border-b-muted/80 p-6 transition-all hover:shadow-sm">
         <div className="flex justify-between">
             <div className="flex items-center gap-2">
                 <Avatar className="w-[35px] h-[35px]">
@@ -50,47 +20,17 @@ export function ProjectPreview({projectData, handleUnsave} : {projectData: Proje
                 </Avatar>
                 <div className="flex flex-col">
                     <Link className="font-semibold hover:text-blue-500 dark:hover:text-blue-200 duration-200" href={`/user/${projectData.owner?.username}`}>{projectData.owner?.name}</Link>
-                    <span className="font-semibold text-sm text-gray-400">@{projectData.owner?.username}</span>
+                    <span className="font-semibold text-sm text-gray-400">{projectData.owner?.headLine || "@"+projectData.owner?.username}</span>
                 </div>
             </div>
 
-            <div className="flex gap-2 items-center">
-                <Tooltip>
-                    <TooltipTrigger>
-                        <div className="w-9 h-9 rounded-full border flex items-center justify-center bg-gray-100 dark:bg-muted/50">
-                            <Send className="w-4 h-4 text-gray-500 dark:text-gray-200"/>
-                        </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        Apply to this project
-                    </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                    <TooltipTrigger>
-                        <div className="w-9 h-9 rounded-full border flex items-center cursor-pointer justify-center bg-gray-100 dark:bg-muted/50" onClick={toggleSaveProject}>
-                            <Save className="w-4 h-4 text-gray-500 dark:text-gray-200"/>
-                        </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        Save this project
-                    </TooltipContent>
-                </Tooltip>
-
-                <Tooltip>
-                    <TooltipTrigger>
-                        <div className="w-9 h-9 rounded-full border flex items-center justify-center bg-gray-100 dark:bg-muted/50">
-                            {statusIndicator[projectData.status].icon}
-                        </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        {statusIndicator[projectData.status].description}
-                    </TooltipContent>
-                </Tooltip>
+            <div>
+                <ProjectActions projectData={projectData} handleUnsave={handleUnsave}/>
             </div>
         </div>
         <div className="flex justify-between items-start mt-3">
             <div>
-                <h2 className="text-2xl font-semibold text-foreground">{projectData.title}</h2>
+                <Link className="text-2xl font-semibold text-foreground hover:underline" href={`/project/${projectData.publicId}`}>{projectData.title}</Link>
                 {projectData.githubUrl && (
                     <a
                     href={projectData.githubUrl}
