@@ -59,6 +59,10 @@ export default function Page() {
     fetchUserProjects()
   },[])
 
+  const onAdded = async (projectData: Project) => {
+    setProjects(prev => [projectData, ...prev])
+  }
+  
   const onUpdate = (projectData: Project) =>{
     const newProjects = projects.map((project) => project._id === projectData._id ? projectData : project);
     setProjects(newProjects);
@@ -91,7 +95,7 @@ export default function Page() {
         }
         {
           !isLoading && projects.length === 0 && (
-            <EmptyState message="No projects was found" description="Get started by creating your first project" action={<ProjectForm />}/>
+            <EmptyState message="No projects was found" description="Get started by creating your first project" action={<ProjectForm onAdded={onAdded}/>}/>
           )
         }
         {

@@ -30,3 +30,9 @@ export const getSavedProjects = async () =>{
     const response = await api.get(`/project/saved`);
     return response;
 }
+
+
+export const getProjectDetails = async (publicId: string) =>{
+    const response = await api.get(`/project/${publicId}`);
+    return response;
+}

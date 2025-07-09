@@ -1,4 +1,6 @@
 import mongoose, { Schema, Types, Document } from "mongoose";
+import { customAlphabet } from 'nanoid';
+const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz0123456789', 10);
 
 export interface IProject extends Document {
     title: string;
@@ -10,6 +12,7 @@ export interface IProject extends Document {
     websiteUrl?: string;
     status: "active" | "archived" | "in progress";
     tags: string[];
+    publicId?: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -37,9 +40,17 @@ const ProjectSchema = new Schema<IProject>(
             default: "active",
         },
         tags: { type: [String], default: [] },
+        publicId: { type: String, unique: true, index: true },
     },
     { timestamps: true }
 );
+
+ProjectSchema.pre('save', async function (next) {
+    if (!this.publicId) {
+      this.publicId = nanoid();
+    }
+    next();
+  });
 
 const Project = mongoose.models.Project || mongoose.model<IProject>('Project', ProjectSchema);
 export default Project;

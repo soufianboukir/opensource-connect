@@ -27,18 +27,22 @@ export async function GET(req: Request) {
         }
 
         if (roles.length > 0) {
-            query['rolesNeeded.role'] = { $in: roles }
+            query['rolesNeeded.role'] = {
+                $in: roles.map(role => new RegExp(`^${role}$`, 'i'))
+            }
         }
 
         if (tags.length > 0) {
-            query.tags = { $all: tags }
+            query.tags = {
+                $all: tags.map(tag => new RegExp(`^${tag}$`, 'i'))
+            }
         }
 
         const sortOption = sort === 'oldest' ? { createdAt: 1 } : { createdAt: -1 }
 
         const [projects, total] = await Promise.all([
             Project.find(query)
-                .populate('owner', 'username name avatarUrl')
+                .populate('owner', 'username name avatarUrl headLine')
                 .sort(sortOption)
                 .skip(skip)
                 .limit(limit),

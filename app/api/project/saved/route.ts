@@ -25,7 +25,7 @@ export async function GET() {
         const projectIds = saved.map((entry) => entry.project)
 
         const projects = await Project.find({ _id: { $in: projectIds } })
-                                    .populate("owner", "username name avatarUrl")
+                                    .populate("owner", "username name avatarUrl headLine")
                                     .sort({ createdAt: -1 })
 
         return NextResponse.json({ projects })

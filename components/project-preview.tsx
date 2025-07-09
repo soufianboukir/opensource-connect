@@ -10,7 +10,7 @@ import { Link as LucideLink } from 'lucide-react'
 import { toast } from "sonner"
 import { toggleSave } from "@/services/project"
 
-export function ProjectPreview({projectData} : {projectData: Project}) {
+export function ProjectPreview({projectData, handleUnsave} : {projectData: Project, handleUnsave?: (projectId: string) => void}) {
 
     const statusIndicator = {
             "in progress": {
@@ -30,7 +30,12 @@ export function ProjectPreview({projectData} : {projectData: Project}) {
     const toggleSaveProject = () =>{
         toast.promise(toggleSave(projectData._id!),{
             loading: 'loading...',
-            success: (response) => response.data.message,
+            success: (response) => {
+                if(!response.data.saved){
+                    handleUnsave?.(projectData._id!)
+                }
+                return response.data.message
+            },
             error: (err) => err.response.data.message
         })
     }
@@ -41,7 +46,7 @@ export function ProjectPreview({projectData} : {projectData: Project}) {
             <div className="flex items-center gap-2">
                 <Avatar className="w-[35px] h-[35px]">
                     <AvatarImage src={projectData.owner?.avatarUrl} />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarFallback>{projectData.owner?.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
                     <Link className="font-semibold hover:text-blue-500 dark:hover:text-blue-200 duration-200" href={`/user/${projectData.owner?.username}`}>{projectData.owner?.name}</Link>

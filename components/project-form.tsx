@@ -27,9 +27,10 @@ type ProjectFormProps = {
   open?: boolean
   onOpenChange?: (val: { open: boolean, projectData: Project }) => void
   onUpdate?: (projectData: Project) => void
+  onAdded?: (projectData: Project) => void
 }
 
-export function ProjectForm({ projectData, open, onOpenChange, onUpdate }: ProjectFormProps) {
+export function ProjectForm({ projectData, open, onOpenChange, onUpdate, onAdded }: ProjectFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<Project>({
     title: projectData?.title || "",
@@ -111,13 +112,14 @@ export function ProjectForm({ projectData, open, onOpenChange, onUpdate }: Proje
         response = await addProject(formData);
         if(response.status === 200){
           toast.success('New Project submitted successfully')
+          onAdded?.(formData);
         }
       }
       if(open){
         response = await updateProject(formData,projectData?._id);
         if(response.status === 200){
-          onOpenChange({open:false, projectData: {title:'',description:'',githubUrl:'',websiteUrl:'',status:'active',tags:[],rolesNeeded:[],techStackNeeded:[]} })
-          onUpdate(response.data.updatedProject)
+          onOpenChange?.({open:false, projectData: {title:'',description:'',githubUrl:'',websiteUrl:'',status:'active',tags:[],rolesNeeded:[],techStackNeeded:[]} })
+          onUpdate?.(response.data.updatedProject)
           toast.success('Project data updated successfully')
         }
       }

@@ -46,6 +46,11 @@ export default function Page() {
         fetchSavedProjects()
     }, [filters])
 
+    const handleUnSave = (projectId: string) =>{
+        const newProjects = projects.filter((project) => project._id !== projectId)
+        setProjects(newProjects);
+    }
+
     
     const handleFilterChange = (newFilters: any) => {
         const isDifferent =
@@ -65,12 +70,12 @@ export default function Page() {
         <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
-                <SiteHeader title="Discovery" />
-                <div className="flex p-4 gap-4">
+                <SiteHeader title="Saved projects" />
+                <div className="flex flex-col-reverse md:flex-row p-4 gap-4">
                     <div className="md:w-[75%] w-[100%] space-y-4">
                         {projects.length > 0 ? (
                             projects.map(project => (
-                                <ProjectPreview key={project._id} projectData={project} />
+                                <ProjectPreview key={project._id} projectData={project} handleUnsave={handleUnSave}/>
                             ))
                             ) : null}
                         {
