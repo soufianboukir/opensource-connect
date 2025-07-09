@@ -19,13 +19,13 @@ const OAuth: React.FC<OAuthProps> = ({
 }) => {
   async function handleGoogleOAuth() {
     setLoading((prev) => ({ ...prev, google: true }));
-    await signIn("google", { callbackUrl: "/panel" });
+    await signIn("google", { callbackUrl: "/discovery" });
     setLoading((prev) => ({ ...prev, google: false }));
   }
 
   async function handleGithubOAuth() {
     setLoading((prev) => ({ ...prev, github: true }));
-    await signIn("github", { callbackUrl: "/panel" });
+    await signIn("github", { callbackUrl: "/discovery" });
     setLoading((prev) => ({ ...prev, github: false }));
   }
 

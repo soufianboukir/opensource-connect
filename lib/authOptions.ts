@@ -24,38 +24,42 @@ export const authOptions: NextAuthOptions = {
       await dbConnection();
       const email = profile.email;
       let user = await User.findOne({ email });
-      console.log('google profile: ',profile);
-      
+    
       if (user) {
-        if (account.provider === "github") {
-          user.username = (profile as any).login;
-        } else if (account.provider === "google") {
-          user.username = profile.email?.split("@")[0];
+        if (!user.username) {
+          user.username = account.provider === "github"
+            ? (profile as any).login
+            : profile.email?.split("@")[0];
         }
-
-        user.avatarUrl = profile.image || user.avatarUrl;
-        user.name = profile.name || user.name;
+    
+        if (!user.name) {
+          user.name = profile.name;
+        }
+    
+        if (!user.avatarUrl) {
+          user.avatarUrl = profile.picture || (profile as any).avatar_url;
+        }
+    
         await user.save();
-        return true;
+      } else {
+        user = await User.create({
+          name: profile.name,
+          email,
+          avatarUrl: profile.picture || (profile as any).avatar_url,
+          username: account.provider === "github"
+            ? (profile as any).login
+            : profile.email?.split("@")[0],
+        });
+    
+        await Notification.create({
+          user: user._id,
+          type: "system",
+          message: `🎉 Welcome aboard, ${user.name}!`,
+        });
       }
-
-      user = await User.create({
-        name: profile.name,
-        email,
-        avatarUrl: profile.picture || profile.avatar_url,
-        username: account.provider === "github"
-          ? (profile as any).login
-          : profile.email?.split("@")[0],
-      });
-
-      await Notification.create({
-        user: user._id,
-        type: "system",
-        message: `🎉 Welcome aboard, ${user.name}!`,
-      });
-
+    
       return true;
-    },
+    },    
 
     async jwt({ token, user, trigger }) {
       if (user) {

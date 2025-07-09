@@ -1,25 +1,14 @@
 'use client'
 
-import { Activity, Archive, Clock, Link, Save, Send, Users } from "lucide-react"
+import { Activity, Archive, Clock, Save, Send, Users } from "lucide-react"
 import { Icon } from "@iconify/react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
+import { Project } from "@/interfaces"
+import Link from "next/link"
+import { Link as LucideLink } from 'lucide-react'
 
-const mockProject = {
-  title: "AI Code Reviewer",
-  description:
-    " A modern real-time chat application features include user authentication, profile customization, real-time messaging, and user search functionality. Here you'll find fragments of my curiosity, experiments, and ambition, written in code, shaped by open source, and shared with intention.",
-  githubUrl: "https://github.com/your-org/ai-code-reviewer",
-  websiteUrl: "https://aicode.io",
-  status: "in progress" as "active" | "archived" | "in progress",
-  techStackNeeded: ["typescript", "nextjs", "openai", "tailwindcss", "mongodb", "nodejs"],
-  tags: ["ai", "code-review", "opensource", "automation", "tools"],
-  rolesNeeded: [{ role: "Frontend", count: 1 }, { role: "Backend", count: 2 }],
-  createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(),
-}
-
-export function ProjectPreview() {
-  const { status } = mockProject
+export function ProjectPreview({projectData} : {projectData: Project}) {
 
   const statusIndicator = {
     "in progress": {
@@ -41,12 +30,12 @@ export function ProjectPreview() {
         <div className="flex justify-between">
             <div className="flex items-center gap-2">
                 <Avatar className="w-[35px] h-[35px]">
-                    <AvatarImage src="https://res.cloudinary.com/dzaqbvnt4/image/upload/v1751998624/user_profiles/xgm4vgqttgwjpgmd5ojx.jpg" />
+                    <AvatarImage src={projectData.owner?.avatarUrl} />
                     <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                    <span className="font-semibold">Soufian boukir</span>
-                    <span className="font-semibold text-sm text-gray-400">@soufianboukir</span>
+                    <Link className="font-semibold hover:text-blue-500 dark:hover:text-blue-200 duration-200" href={`/user/${projectData.owner?.username}`}>{projectData.owner?.name}</Link>
+                    <span className="font-semibold text-sm text-gray-400">@{projectData.owner?.username}</span>
                 </div>
             </div>
 
@@ -75,38 +64,38 @@ export function ProjectPreview() {
                 <Tooltip>
                     <TooltipTrigger>
                         <div className="w-9 h-9 rounded-full border flex items-center justify-center bg-gray-100 dark:bg-muted/50">
-                            {statusIndicator[status].icon}
+                            {statusIndicator[projectData.status].icon}
                         </div>
                     </TooltipTrigger>
                     <TooltipContent>
-                        {statusIndicator[status].description}
+                        {statusIndicator[projectData.status].description}
                     </TooltipContent>
                 </Tooltip>
             </div>
         </div>
         <div className="flex justify-between items-start mt-3">
             <div>
-                <h2 className="text-2xl font-semibold text-foreground">{mockProject.title}</h2>
-                {mockProject.githubUrl && (
+                <h2 className="text-2xl font-semibold text-foreground">{projectData.title}</h2>
+                {projectData.githubUrl && (
                     <a
-                    href={mockProject.githubUrl}
+                    href={projectData.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1 mt-1"
                     >
-                    <Link className="w-4 h-4" />
-                    {mockProject.githubUrl.replace(/^https?:\/\//, '')}
+                    <LucideLink className="w-4 h-4" />
+                    {projectData.githubUrl.replace(/^https?:\/\//, '')}
                     </a>
                 )}
             </div>
         </div>
 
         <p className="text-muted-foreground mt-4 line-clamp-4">
-            {mockProject.description}
+            {projectData.description}
         </p>
 
         <div className="mt-4 flex flex-wrap gap-2">
-            {mockProject.techStackNeeded.map((tech) => (
+            {projectData.techStackNeeded.map((tech) => (
                 <span
                     key={tech}
                     className="px-3 py-1 text-xs font-medium rounded-full bg-blue-50 dark:bg-muted/40 border"
@@ -118,7 +107,7 @@ export function ProjectPreview() {
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
-            {mockProject.tags.map((tag, index) => (
+            {projectData.tags.map((tag, index) => (
                 <span key={index} className="text-xs text-muted-foreground">#{tag}</span>
             ))}
         </div>
@@ -126,9 +115,9 @@ export function ProjectPreview() {
         <div className="mt-2 pt-4 flex justify-between text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
                 <Users className="w-4 h-4" />
-                {mockProject.rolesNeeded.reduce((acc, role) => acc + role.count, 0)} roles open
+                {projectData.rolesNeeded.reduce((acc, role) => acc + role.count, 0)} roles open
             </div>
-            <span>Posted {formatRelativeTime(mockProject.createdAt)}</span>
+            <span>Posted {formatRelativeTime(projectData.createdAt!)}</span>
         </div>
     </div>
   )

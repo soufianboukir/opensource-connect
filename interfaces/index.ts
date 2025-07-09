@@ -18,6 +18,11 @@ export interface Project{
     _id?: string;
     title: string,
     description: string,
+    owner?:{
+        name: string;
+        username: string;
+        avatarUrl: string;
+    },
     githubUrl: string,
     websiteUrl: string,
     status: "active" | "archived" | "in progress",
