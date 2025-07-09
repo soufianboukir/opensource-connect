@@ -13,6 +13,7 @@ import { Cake, Earth, Github } from "lucide-react";
 import Link from "next/link";
 import { EditProfile } from "@/components/edit-profile";
 import { Metadata } from "next";
+import { ApplicationSubmission } from "@/components/application-submission";
 
 interface UserProfileProps {
   params: {
@@ -151,6 +152,14 @@ export default async function UserProfile({ params }: UserProfileProps) {
                 <EditProfile user={user}/>
               </div>
             )}
+            {
+              !isCurrentUser && (
+                <div>
+                    <br />
+                    <ApplicationSubmission proposeCollaboration={true}/>
+                </div>
+              )
+            }
           </div>
         </div>
       </SidebarInset>

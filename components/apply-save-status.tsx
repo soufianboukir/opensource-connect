@@ -2,11 +2,12 @@
 
 import React from 'react'
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
-import { Save, Send } from 'lucide-react'
+import { Save } from 'lucide-react'
 import { statusIndicator } from '@/constants/status-indicator'
 import { Project } from '@/interfaces'
 import { toggleSave } from '@/services/project'
 import { toast } from 'sonner'
+import { ApplicationSubmission } from './application-submission'
 
 export const ProjectActions = ({projectData, handleUnsave}: {projectData: Project, handleUnsave?: (projectId: string) => void}) => {
     const toggleSaveProject = () =>{
@@ -23,16 +24,7 @@ export const ProjectActions = ({projectData, handleUnsave}: {projectData: Projec
     }
   return (
     <div className="flex gap-2 items-center">
-        <Tooltip>
-            <TooltipTrigger>
-                <div className="w-9 h-9 rounded-full border flex items-center justify-center bg-gray-100 dark:bg-muted/50">
-                    <Send className="w-4 h-4 text-gray-500 dark:text-gray-200"/>
-                </div>
-            </TooltipTrigger>
-            <TooltipContent>
-                Apply to this project
-            </TooltipContent>
-        </Tooltip>
+        <ApplicationSubmission />
         <Tooltip>
             <TooltipTrigger>
                 <div className="w-9 h-9 rounded-full border flex items-center cursor-pointer justify-center bg-gray-100 dark:bg-muted/50" onClick={toggleSaveProject}>

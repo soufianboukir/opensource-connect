@@ -4,6 +4,7 @@ export interface IApplication extends Document {
     applicant: Types.ObjectId;
     toUser: Types.ObjectId;
     project?: Types.ObjectId;
+    type: 'project application' | 'propose collaboration';
     message?: string;
     status: 'pending' | 'accepted' | 'rejected';
     createdAt: Date;
@@ -15,8 +16,9 @@ const applicationSchema = new Schema<IApplication>(
         applicant: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         toUser: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         project: { type: Schema.Types.ObjectId, ref: 'Project', required: false },
+        type: { type: String, enum: ['project application' , 'propose collaboration'], default: 'propose collaboration' },
         message: { type: String },
-        status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' }
+        status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' },
     },
     { timestamps: true }
 );
