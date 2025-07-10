@@ -5,6 +5,7 @@ import { Separator } from '@radix-ui/react-separator'
 import { ModeToggle } from './theme-toggle'
 import Notifications from '../notifications'
 import { ProjectForm } from '../project-form'
+import { SearchBar } from '../search-bar'
 
 
 export const SiteHeader = ({title}: {title: string}) => {
@@ -15,6 +16,10 @@ export const SiteHeader = ({title}: {title: string}) => {
                     <SidebarTrigger className="-ml-1" />
                     <Separator orientation="vertical" className="mr-2 h-4" />
                     <span className="text-xl font-semibold">{title}</span>
+                </div>
+
+                <div>
+                    <SearchBar />
                 </div>
 
                 <div className="flex items-center gap-4">

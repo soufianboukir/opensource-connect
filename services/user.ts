@@ -8,3 +8,9 @@ export const updateProfile = async (formData: FormData) =>{
     });
     return response
 }
+
+
+export const getSuggestedUsers = async () =>{
+    const response = await api.get(`/user/suggested`);
+    return response; 
+}
