@@ -37,7 +37,6 @@ export async function POST(req: NextRequest) {
     const techStackRaw = formData.get("techStack")
     const file = formData.get("image") as File | null;
 
-    console.log(techStackRaw);
     
     await dbConnection();
 
@@ -56,6 +55,14 @@ export async function POST(req: NextRequest) {
     if (githubUrl) user.githubUrl = githubUrl;
     if (websiteUrl) user.websiteUrl = websiteUrl;
 
+    const usernameExists = await User.findOne({$and:[{username},{_id:{$ne:session.user.id}}]})
+
+    if(usernameExists){
+      return NextResponse.json(
+        { error: "Username already exists" },
+        { status: 400 }
+      );
+    }
     if (techStackRaw) {
       try {
         const parsedTechStack = JSON.parse(techStackRaw as string);

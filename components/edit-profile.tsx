@@ -91,8 +91,12 @@ export function EditProfile({user} : {user: IUser}) {
                 window.location.reload();
             }
             
-        }catch{
-            toast.error('Failed to update profile data')
+        }catch(error:any){
+          if(error.response.data.error){
+              toast.error(error.response.data.error)
+          }else{
+              toast.error('Failed to update profile data')
+          }
         }finally{
             setIsLoading(false)
         }

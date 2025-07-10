@@ -9,3 +9,8 @@ export const applicationAction = async (applicationId: string, type: 'cancel' | 
     const response = await api.patch(`/application/${applicationId}/${type}`)
     return response;
 }
+
+export const editApplication = async (id: string, message: string) =>{
+    const response = await api.patch(`/application/${id}/edit`,{message});
+    return response;
+}
