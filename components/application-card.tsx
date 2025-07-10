@@ -7,6 +7,7 @@ import { Mail, ExternalLink } from 'lucide-react'
 import clsx from 'clsx'
 import moment from 'moment'
 import { ApplicationActionDialog } from './application-actions'
+import { ViewApplication } from './view-application'
 export function ApplicationCard({
   data,
   direction,
@@ -16,6 +17,8 @@ export function ApplicationCard({
 }) {
   const user = direction === 'incoming' ? data.applicant : data.toUser
   const isPending = data.status === 'pending'
+  const isAccepted = data.status === 'accepted'
+  const isRejected = data.status === 'rejected'
   const isProject = data.type === 'project application'
 
   return (
@@ -63,7 +66,7 @@ export function ApplicationCard({
             {data.status}
           </Badge>
         </div>
-        <div className="text-sm text-muted-foreground whitespace-pre-line line-clamp-4">
+        <div className="text-sm text-muted-foreground whitespace-pre-line line-clamp-3">
           {data.message || <span className="italic">No message provided.</span>}
         </div>
       </div>
@@ -97,9 +100,26 @@ export function ApplicationCard({
 
         <br />
 
+      {
+        isRejected && (
+              <div className="flex gap-2 justify-end pt-2 absolute bottom-4 mt-4 right-4">
+                <ApplicationActionDialog
+                  actionType="cancel"
+                  triggerLabel={"Delete"}
+                  applicationId={data._id}/>
+              </div>
+        )
+      }
+      {
+        isAccepted && direction === 'outgoing' && (
+        <div className="flex gap-2 justify-end pt-2 absolute bottom-4 mt-4 right-4">
+                <Button variant="outline" size="sm"><Mail className="w-4 h-4 mr-1" />Message</Button>
+        </div>
+        )
+      }
       {isPending && (
         <div className="flex gap-2 justify-end pt-2 absolute bottom-4 mt-4 right-4">
-          <Button variant="outline" size="sm">View Application</Button>
+          <ViewApplication applicationData={data} editable={true} />
           {direction === 'incoming' ? (
             <>
               <Button variant="outline" size="sm"><Mail className="w-4 h-4 mr-1" />Message</Button>

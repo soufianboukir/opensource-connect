@@ -9,9 +9,11 @@ import moment from 'moment'
 import Link from "next/link";
 import { getNotifications, markNotificationsAsRead } from "@/services/notification";
 import { Notification } from "@/interfaces";
+import { useRouter } from "next/navigation";
 
 export default function Notifications() {
     const [notifications,setNotifications] = useState<Notification[]>([]);
+    const router = useRouter()
 
     useEffect(() =>{
         const fetchNotifications = async () =>{
@@ -72,8 +74,10 @@ export default function Notifications() {
             </div>
             <div className="max-h-96 overflow-y-auto">
                 {notifications && notifications.map((notification, idx) => (
-                    <span
+                    <Link
+                        href={notification.link}
                         key={idx}
+                        onClick={notification.link ? () => router.push?.(notification?.link) : () => {}}
                         className={cn(
                         "p-4 border-b cursor-pointer border-gray-200 dark:border-gray-800 transition-all duration-300",
                         "hover:bg-gray-50 dark:hover:bg-black/50",
@@ -87,7 +91,12 @@ export default function Notifications() {
                             <div>
                                 <h4 className="text-sm font-semibold text-gray-800 dark:text-gray-100">
                                     {notification.type === 'system' && 'System'}
-                                    {notification.type === 'apply' && 'Application received'}
+                                    {notification.type === 'project application' && 'Application received'}
+                                    {notification.type === 'propose collaboration' && 'Collaboration proposal'}
+                                    {notification.type === 'project app rejected' && 'Project application rejected'}
+                                    {notification.type === 'project app accepted' && 'Project application accepted'}
+                                    {notification.type === 'collaboration rejected' && 'Collaboration rejected'}
+                                    {notification.type === 'collaboration accepted' && 'Collaboration accpted'}
                                 </h4>
 
                                 <p className="text-sm text-gray-600 dark:text-gray-300 mt-0.5">
@@ -110,7 +119,7 @@ export default function Notifications() {
                             <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse block"></span>
                         </div>
                         )}
-                    </span>
+                    </Link>
                 ))}
 
             </div>

@@ -77,7 +77,7 @@ export function ApplicationSubmission({ proposeCollaboration, project, toUser }:
                         { proposeCollaboration ? "Propose a collaboration" : "Apply to This Project"}
                     </DialogTitle>
                     <DialogDescription className="text-sm text-muted-foreground">
-                        { proposeCollaboration ? "Introduce yourself and explain what kind of collaboration you're looking for. The developer will get back to you if interested." : "Provide a short message and your preferred contact method. The project owner will review your request."}
+                        { proposeCollaboration ? "Introduce yourself and explain what kind of collaboration you're looking for. The developer will get back to you if interested." : "Provide a short message. The project owner will review your request."}
                     </DialogDescription>
                 </DialogHeader>
 

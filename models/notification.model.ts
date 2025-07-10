@@ -3,7 +3,7 @@ import mongoose, { Document, Schema, Types } from 'mongoose';
 export interface INotification extends Document {
     user: Types.ObjectId;
     fromUser?: Types.ObjectId;
-    type: 'system' | 'project application' | 'propose collaboration';
+    type: 'system' | 'project application' | 'propose collaboration' | 'project app rejected' | 'collaboration rejected' | 'project app accepted' | 'collaboration accepted';
     message: string;
     read: boolean;
     link?: string;

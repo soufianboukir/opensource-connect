@@ -71,9 +71,9 @@ export async function POST(req: NextRequest) {
             fromUser: session.user.id,
             type: type === 'project application' ? 'project application' : 'propose collaboration',
             message: type === 'project application'
-                ? `📩 ${session.user.name} applied to your project.`
-                : `🤝 ${session.user.name} sent you a collaboration request.`,
-            link: `/applications`,
+                ? `${session.user.name} applied to your project.`
+                : `${session.user.name} sent you a collaboration request.`,
+            link: `/apps`,
             read: false,
         })
 

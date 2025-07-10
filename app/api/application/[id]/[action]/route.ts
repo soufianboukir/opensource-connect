@@ -22,7 +22,6 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
         const userId = session.user.id
         const isOwner = String(application.toUser) === userId
-        const isApplicant = String(application.applicant) === userId
 
         switch (action) {
             case 'accept': {
@@ -38,11 +37,13 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
                 await Notification.create({
                     user: application.applicant,
                     fromUser: application.toUser,
-                    type: application.type,
+                    type: application.type === 'project application' ? 
+                        'project app accepted'
+                    : 'collaboration accepted',
                     message: application.type === 'project application'
                     ? `Success! your application${projectTitle ? ` for "${projectTitle}"` : ''} has been accepted.`
                     : `Success! your collaboration request has been accepted.`,
-                    link: '/applications',
+                    link: '/apps',
                     read: false,
                 })
                 
@@ -62,11 +63,13 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
                 await Notification.create({
                     user: application.applicant,
                     fromUser: application.toUser,
-                    type: application.type,
+                    type: application.type === 'project application' ? 
+                        'project app rejected'
+                    : 'collaboration rejected',
                     message: application.type === 'project application'
                         ? `Sorry! your application${projectTitle ? ` for "${projectTitle}"` : ''} has been rejected.`
                         : `Sorry! your collaboration request has been rejected.`,
-                    link: '/applications',
+                    link: '/apps',
                     read: false,
                 })
             
@@ -75,9 +78,6 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
               
 
             case 'cancel':
-                if (!isApplicant)
-                return NextResponse.json({ message: 'Only the applicant can cancel the application' }, { status: 403 })
-
                 await application.deleteOne()
                 return NextResponse.json({ message: 'Application cancelled' })
 

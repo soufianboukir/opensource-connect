@@ -7,10 +7,10 @@ export interface Notification{
         name: string;
         avatarUrl: string;
     };
-    type: 'system' | 'apply';
+    type: 'system' | 'project application' | 'propose collaboration' | 'project app rejected' | 'collaboration rejected' | 'project app accepted' | 'collaboration accepted';
     message: string;
     read: boolean;
-    link?: string;
+    link: string;
     createdAt: Date;
 }
 
@@ -44,6 +44,10 @@ export interface Application {
     email: string
     username: string
     avatarUrl?: string
+    githubUrl: string
+    experienceLevel: string
+    openToWork: boolean
+    headLine: string
   }
   toUser: {
     _id: string
@@ -51,6 +55,10 @@ export interface Application {
     email: string
     username: string
     avatarUrl?: string
+    githubUrl: string
+    experienceLevel: string
+    openToWork: boolean
+    headLine: string
   }
   project?: Project
   type: 'project application' | 'propose collaboration'
