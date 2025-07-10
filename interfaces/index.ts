@@ -35,3 +35,27 @@ export interface Project{
     createdAt?: string;
     updatedAt?: string;
 }
+
+export interface Application {
+  _id: string
+  applicant: {
+    _id: string
+    name: string
+    email: string
+    username: string
+    avatarUrl?: string
+  }
+  toUser: {
+    _id: string
+    name: string
+    email: string
+    username: string
+    avatarUrl?: string
+  }
+  project?: Project
+  type: 'project application' | 'propose collaboration'
+  message?: string
+  status: 'pending' | 'accepted' | 'rejected'
+  createdAt: string
+  updatedAt: string
+}

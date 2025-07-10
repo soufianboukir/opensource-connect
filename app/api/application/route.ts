@@ -17,6 +17,10 @@ export async function POST(req: NextRequest) {
         await dbConnection()
         const { toUser, project, type, message } = await req.json()
 
+        if(toUser === session.user.id){
+            return NextResponse.json({ message: "You can't apply to a project posted by yourself" }, { status: 403 })
+        }
+
         if (!toUser || !type) {
             return NextResponse.json({ message: 'Missing required fields' }, { status: 400 })
         }
