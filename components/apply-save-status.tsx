@@ -24,7 +24,7 @@ export const ProjectActions = ({projectData, handleUnsave}: {projectData: Projec
     }
   return (
     <div className="flex gap-2 items-center">
-        <ApplicationSubmission />
+        <ApplicationSubmission project={projectData._id!} toUser={projectData?.owner?._id}/>
         <Tooltip>
             <TooltipTrigger>
                 <div className="w-9 h-9 rounded-full border flex items-center cursor-pointer justify-center bg-gray-100 dark:bg-muted/50" onClick={toggleSaveProject}>

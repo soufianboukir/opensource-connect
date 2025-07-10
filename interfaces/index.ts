@@ -20,6 +20,7 @@ export interface Project{
     title: string,
     description: string,
     owner?:{
+        _id: string;
         name: string;
         username: string;
         avatarUrl: string;

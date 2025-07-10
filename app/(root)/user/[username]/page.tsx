@@ -156,7 +156,7 @@ export default async function UserProfile({ params }: UserProfileProps) {
               !isCurrentUser && (
                 <div>
                     <br />
-                    <ApplicationSubmission proposeCollaboration={true}/>
+                    <ApplicationSubmission proposeCollaboration={true} toUser={user._id}/>
                 </div>
               )
             }

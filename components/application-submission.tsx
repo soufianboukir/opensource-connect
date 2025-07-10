@@ -1,3 +1,5 @@
+'use client'
+
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -13,8 +15,39 @@ import { Label } from "@/components/ui/label"
 import { Send } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip"
 import { Textarea } from "./ui/textarea"
+import { useState } from "react"
+import { sendApplication } from "@/services/application"
+import { toast } from "sonner"
 
-export function ApplicationSubmission({ proposeCollaboration }: {proposeCollaboration?: boolean}) {
+export function ApplicationSubmission({ proposeCollaboration, project, toUser }: {proposeCollaboration?: boolean, project?: string, toUser?: string}) {
+    const [loading,setLoading] = useState(false)
+    const [message,setMessage] = useState<string>('');
+
+    const handleSubmit = async () =>{
+        try{            
+            if(message === ''){
+                toast.error('Please type a message')
+                return
+            }
+            if(message.length <= 10){
+                toast.error('Please type a message greater than 10 charachters')
+                return
+            }
+            setLoading(true)
+            const response = await sendApplication(toUser!,proposeCollaboration ? 'propose collaboration' : 'project application',message,project)
+            if(response.status === 200){
+                toast.success('Application has been submitted successfully')
+            }
+        }catch(error: any){
+            if(error.response.data.message){
+                toast.error(error.response.data.message)
+            }else{
+                toast.error('An error occured. please try again')
+            }
+        }finally{
+            setLoading(false)
+        }
+    }
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -53,6 +86,8 @@ export function ApplicationSubmission({ proposeCollaboration }: {proposeCollabor
                     <Label htmlFor="message">Message</Label>
                     <Textarea
                         id="message"
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
                         placeholder="Write a short introduction or why you're interested..."
                         className="min-h-[100px]"
                     />
@@ -65,8 +100,10 @@ export function ApplicationSubmission({ proposeCollaboration }: {proposeCollabor
                         Cancel
                     </Button>
                     </DialogClose>
-                    <Button type="submit" className="bg-blue-600 text-white hover:bg-blue-700">
-                    Send Application
+                    <Button type="submit" className="bg-blue-600 text-white hover:bg-blue-700" disabled={loading} onClick={handleSubmit}>
+                        {
+                            loading ? "Sending..." : "Send Application" 
+                        }
                     </Button>
                 </DialogFooter>
             </DialogContent>
