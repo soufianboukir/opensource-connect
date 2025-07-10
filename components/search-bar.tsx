@@ -22,6 +22,7 @@ import Link from "next/link"
 import { search } from "@/services/search"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { Project, User } from "@/interfaces"
 
 export function SearchBar() {
     const [open, setOpen] = React.useState(false)
@@ -93,7 +94,7 @@ export function SearchBar() {
       }
       document.addEventListener("keydown", down)
       return () => document.removeEventListener("keydown", down)
-    }, [inputValue,router])
+    }, [inputValue,router,open])
   
 
     React.useEffect(() => {
@@ -130,7 +131,7 @@ export function SearchBar() {
 
               {suggestedUsers.length > 0 && (
                 <CommandGroup heading="Suggested Developers">
-                  {suggestedUsers.map((user: any,index) => (
+                  {suggestedUsers.map((user: User,index) => (
                     <CommandItem key={user._id || index} className="p-0">
                     <Link href={`/user/${user.username}`} className="flex gap-2 w-full hover:bg-muted items-center">
                       <Avatar className="w-7 h-7">
@@ -154,7 +155,7 @@ export function SearchBar() {
           {((results.users.length !== 0 || results.projects.length !== 0) && !loading) && (
             <>
               { results.users.length !== 0 && <p className="dark:text-white/80 text-black/90 font-semibold text-xs mt-2 pl-2">Users</p>}
-                {results.users.map((user: any) => (
+                {results.users.map((user: User) => (
                     <Link
                       key={user._id}
                       href={`/user/${user.username}`}
@@ -173,7 +174,7 @@ export function SearchBar() {
 
                   
               { results.projects.length !== 0 && <p className="dark:text-white/80 text-black/90 font-semibold text-xs mt-2 pl-2">Projects</p>}
-                {results.projects.map((project: any) => (
+                {results.projects.map((project: Project) => (
                     <Link
                       key={project._id}
                       href={`/project/${project.publicId}`}

@@ -13,6 +13,7 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/app-sidebar'
 import { SiteHeader } from '@/components/ui/site-header'
 import { Icon } from '@iconify/react/dist/iconify.js'
+import { Project, User } from '@/interfaces'
 
 export default function SearchPage() {
   const searchParams = useSearchParams()
@@ -56,11 +57,11 @@ export default function SearchPage() {
                         <p className="text-muted-foreground">No users found.</p>
                         ) : (
                         <div className="grid gap-4">
-                            {results.users.map((user: any) => (
+                            {results.users.map((user: User) => (
                             <Link key={user._id} href={`/user/${user.username}`} className="flex items-start gap-4 border p-4 rounded-md hover:shadow-md transition">
                                 <Avatar className="h-12 w-12">
-                                <AvatarImage src={user.avatarUrl} />
-                                <AvatarFallback>{user.name[0]}</AvatarFallback>
+                                    <AvatarImage src={user.avatarUrl} />
+                                    <AvatarFallback>{user.name[0]}</AvatarFallback>
                                 </Avatar>
                                 <div className="flex-1 space-y-1">
                                 <div className="flex items-center gap-2">
@@ -95,7 +96,7 @@ export default function SearchPage() {
                         <p className="text-muted-foreground">No projects found.</p>
                         ) : (
                         <div className="grid gap-4">
-                            {results.projects.map((project: any) => (
+                            {results.projects.map((project: Project) => (
                             <ProjectPreview key={project._id} projectData={project}/>
                             ))}
                         </div>

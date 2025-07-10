@@ -1,3 +1,17 @@
+export interface User {
+    _id: string
+    name: string
+    email: string
+    username: string
+    avatarUrl?: string
+    githubUrl: string
+    experienceLevel: string
+    openToWork: boolean
+    headLine: string
+    techStack: string[]
+}
+
+
 export interface Notification{
     user: {
         name: string;
