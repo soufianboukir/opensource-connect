@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
             ],
         })
             .limit(8)
-            .select('name username avatarUrl headLine'),
+            .select('name username avatarUrl headLine techStack'),
 
         Project.find({
             $or: [
@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
         })
             .limit(8)
             .populate('owner', 'name username avatarUrl')
-            .select('title description tags techStackNeeded publicId'),
+            .select('title description tags techStackNeeded publicId rolesNeeded status createdAt'),
         ])
 
         return NextResponse.json({ users, projects }, { status: 200 })
