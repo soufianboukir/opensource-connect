@@ -13,13 +13,16 @@ export interface User {
 
 
 export interface Notification{
+  _id: string;
     user: {
         name: string;
         avatarUrl: string;
+        username: string
     };
     fromUser?: {
         name: string;
         avatarUrl: string;
+        username: string
     };
     type: 'system' | 'project application' | 'propose collaboration' | 'project app rejected' | 'collaboration rejected' | 'project app accepted' | 'collaboration accepted';
     message: string;

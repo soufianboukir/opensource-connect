@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
-                .populate('fromuser', 'name avatarUrl')
+                .populate('fromUser', 'name avatarUrl')
                 .lean()
 
         return NextResponse.json({
@@ -31,7 +31,9 @@ export async function GET(req: NextRequest) {
             totalPages: Math.ceil(total / limit),
             totalItems: total,
         })
-    } catch {
+    } catch(error) {
+        console.log(error);
+        
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
     }
 }

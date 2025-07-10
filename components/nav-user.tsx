@@ -104,7 +104,9 @@ export function NavUser({
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Bell />
-                Notifications
+                <Link href={`/notifications`}>
+                  Notifications
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
