@@ -4,3 +4,8 @@ export const sendApplication = async (toUser: string,type: string, message: stri
     const response = await api.post(`/application`,{toUser,project,type,message});
     return response;
 }
+
+export const applicationAction = async (applicationId: string, type: 'cancel' | 'accept' | 'reject') =>{
+    const response = await api.patch(`/application/${applicationId}/${type}`)
+    return response;
+}

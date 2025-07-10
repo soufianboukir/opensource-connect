@@ -6,6 +6,7 @@ import { Button } from './ui/button'
 import { Mail, ExternalLink } from 'lucide-react'
 import clsx from 'clsx'
 import moment from 'moment'
+import { ApplicationActionDialog } from './application-actions'
 export function ApplicationCard({
   data,
   direction,
@@ -67,7 +68,6 @@ export function ApplicationCard({
         </div>
       </div>
 
-      {/* Project Summary */}
       {data.project && (
         <div className="p-3 bg-muted/10 rounded-md">
           <div className="flex items-start justify-between">
@@ -103,12 +103,22 @@ export function ApplicationCard({
           {direction === 'incoming' ? (
             <>
               <Button variant="outline" size="sm"><Mail className="w-4 h-4 mr-1" />Message</Button>
-              <Button variant="destructive" size="sm">Reject</Button>
-              <Button size="sm">Accept</Button>
+              <ApplicationActionDialog 
+                actionType="reject"
+                triggerLabel={"Reject"}
+                applicationId={data._id}/>
+               <ApplicationActionDialog
+                actionType="accept"
+                triggerLabel={"Accept"}
+                applicationId={data._id}/>
             </>
           ) : (
             <>
-              <Button variant="destructive" size="sm">Cancel</Button>
+            <ApplicationActionDialog
+              actionType="cancel"
+              triggerLabel={"Cancel"}
+              applicationId={data._id}
+            />
             </>
           )}
         </div>
