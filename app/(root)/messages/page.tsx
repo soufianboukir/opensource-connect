@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Search, Send, Trash2 } from 'lucide-react'
+import { ClipboardList, Handshake, Search, Send, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import moment from 'moment'
@@ -12,63 +12,30 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/app-sidebar'
 import { SiteHeader } from '@/components/ui/site-header'
 import Loading from '@/components/loading'
-import { getConversations } from '@/services/communication'
+import { getConversations, getMessagesByConversation } from '@/services/communication'
 import { useSession } from 'next-auth/react'
+import { EmptyState } from '@/components/empty-state'
+import Link from 'next/link'
 
 const defaultImage = 'https://via.placeholder.com/150'
 
-const exampleConversations = [
-  {
-    _id: 'conv1',
-    updatedAt: new Date().toISOString(),
-    lastMessage: 'Hey, how are you?',
-    participants: [
-      { _id: 'user1', name: 'You', profilePictureUrl: null },
-      { _id: 'user2', name: 'Alice', profilePictureUrl: null },
-    ],
-  },
-  {
-    _id: 'conv2',
-    updatedAt: new Date().toISOString(),
-    lastMessage: 'Let’s catch up tomorrow.',
-    participants: [
-      { _id: 'user1', name: 'You', profilePictureUrl: null },
-      { _id: 'user3', name: 'Bob', profilePictureUrl: null },
-    ],
-  },
-]
-
-const exampleMessages = [
-  {
-    _id: 'msg1',
-    sender: { _id: 'user1' },
-    text: 'Hello Alice!',
-    createdAt: new Date().toISOString(),
-  },
-  {
-    _id: 'msg2',
-    sender: { _id: 'user2' },
-    text: 'Hi! How are you?',
-    createdAt: new Date().toISOString(),
-  },
-]
 
 export default function MessagesPage() {
   const [query, setQuery] = useState('')
   const [newMessage, setNewMessage] = useState('')
-  const [conversations, setConversations] = useState(exampleConversations)
-  const [selectedConversation, setSelectedConversation] = useState(exampleConversations[0])
-  const [messages, setMessages] = useState(exampleMessages)
+  const [conversations, setConversations] = useState([])
+  const [selectedConversation, setSelectedConversation] = useState(conversations[0])
+  const [messages, setMessages] = useState([])
   const [loadConvs, setLoadConvs] = useState(false)
   const [loadMssgs, setLoadMssgs] = useState(false)
   const { data: session, status } = useSession()
 
   const messagesEndRef = useRef(null)
 
-  const conversationsToShow = conversations.filter((c) => {
-    const other = c.participants.find((p) => p._id !== session?.user.id)
-    return other?.name.toLowerCase().includes(query.toLowerCase())
-  })
+  // const conversationsToShow = conversations.filter((c) => {
+  //   const other = c.participants.find((p) => p._id !== session?.user.id)
+  //   return other?.name.toLowerCase().includes(query.toLowerCase())
+  // })
 
   const fetchConversations = async () =>{
     try{
@@ -86,6 +53,7 @@ export default function MessagesPage() {
     }
   }
 
+  
   const otherParticipant = selectedConversation?.participants.find(p => p._id !== session?.user.id)
 
   const sendMessage = () => {
@@ -120,9 +88,33 @@ export default function MessagesPage() {
     fetchConversations()
   },[])
 
+  useEffect(() =>{
+    const fetchMessagesByConversation = async () =>{
+      try{
+          setLoadMssgs(true)          
+          const response = await getMessagesByConversation(selectedConversation._id)
+          
+          if(response.status === 200){
+              setMessages(response.data.messages)
+          }
+      }catch{
+  
+      }finally{
+        setLoadMssgs(false)
+      }
+    }
+    fetchMessagesByConversation()
+  },[selectedConversation])
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView?.({ behavior: 'smooth' })
   }, [messages])
+
+  useEffect(() => {
+    if (!selectedConversation && conversations.length > 0) {
+      setSelectedConversation(conversations[0])
+    }
+  }, [conversations, selectedConversation])
 
   if(status === 'loading') return null
 
@@ -138,17 +130,20 @@ export default function MessagesPage() {
                         <div className="relative mt-4">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                             <Input
-                            placeholder="Search conversations..."
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                            className="pl-10 py-2 rounded-full bg-gray-100 dark:bg-muted/60 border-none focus:ring-2 focus:ring-blue-500 transition"
+                              placeholder="Search conversations..."
+                              value={query}
+                              onChange={(e) => setQuery(e.target.value)}
+                              className="pl-10 py-2 rounded-full bg-gray-100 dark:bg-muted/60 border-none focus:ring-2 focus:ring-blue-500 transition"
                             />
                         </div>
                     </div>
 
                     <div className="flex-1 overflow-y-auto custom-scrollbar">
-                    {conversations.map((conv) => {
-                        const participant = conv.participants.find((p) => p._id !== session?.user.id)
+                    {conversations && conversations.map((conv) => {
+                        const participant = conv?.participants?.find((p) => p._id !== session?.user.id)
+                        console.log(conv);
+                        
+                        
                             return (
                             <div
                                 key={conv._id}
@@ -171,7 +166,7 @@ export default function MessagesPage() {
                                         </span>
                                     </div>
                                     <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                                        {conv.lastMessage.text}
+                                        {conv?.lastMessage.text}
                                     </div>
                                 </div>
                             </div>
@@ -180,7 +175,7 @@ export default function MessagesPage() {
 
                     {loadConvs && <Loading message='Laoding cnversations...'/>}
                         {conversations.length === 0 && !loadConvs && (
-                            <h1 className="text-xl mt-2 ml-2">No conversations found.</h1>
+                          <EmptyState message='No conversation found' description='Try to propose collaborations to other developers or post projects to get applications'/>
                         )}
                     </div>
                 </div>
@@ -189,27 +184,46 @@ export default function MessagesPage() {
                     {selectedConversation && (
                     <>
                         <div className="flex items-center justify-between w-full dark:bg-black/60 border-b border-gray-200 dark:border-gray-900 p-4">
-                            <div className="flex gap-4">
-                                    <Avatar className="w-12 h-12 shadow-md ring-2 ring-blue-300 dark:ring-blue-600">
-                                        <Image
-                                        width={100}
-                                        height={100}
-                                            src={otherParticipant?.profilePictureUrl || defaultImage}
-                                            alt="Profile"
-                                            className="w-12 h-12 rounded-full object-cover transition border-2 border-white"
-                                        />
-                                        </Avatar>
-                                    <div>
-                                    <div className="font-semibold text-lg">{otherParticipant?.name}</div>
-                                    <div className="text-xs text-gray-500 dark:text-gray-400">
-                                        Last active {moment(selectedConversation.updatedAt).fromNow()}
-                                    </div>
-                                </div>
+                          <div className="flex gap-4 items-center">
+                            <Avatar className="h-12 w-12">
+                              <AvatarImage src={otherParticipant?.avatarUrl} />
+                              <AvatarFallback>{otherParticipant?.name?.charAt(0) || 'U'}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="font-semibold text-lg">
+                                <Link href={`/user/${otherParticipant.username}`} className='hover:text-sky-700 duration-200'>  
+                                  {otherParticipant?.name}
+                                </Link>
+                              </div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400">
+                                Last active {moment(selectedConversation.updatedAt).fromNow()}
+                              </div>
                             </div>
+                          </div>
+
+                          {selectedConversation?.project && (
+                            <Button
+                              variant="outline"
+                              className="text-sm font-medium dark:hover:bg-muted/30"
+                            >
+                              <ClipboardList />
+                              Project Application
+                            </Button>
+                          )}
+                          {!selectedConversation?.project && (
+                            <Button
+                              variant="outline"
+                              className="text-sm font-medium dark:hover:bg-muted/30"
+                            >
+                              <Handshake className='w-8 h-8'/>
+                              Collaboration Proposal
+                            </Button>
+                          )}
                         </div>
 
+
                         <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50 dark:bg-black/60 custom-scrollbar">
-                        {messages.map((msg) => {
+                        {messages && messages.map((msg) => {
                             const isOwnMessage = msg.sender._id === session?.user.id
                             return (
                             <div key={msg._id} className={cn('flex group', isOwnMessage ? 'justify-end' : 'justify-start')}>

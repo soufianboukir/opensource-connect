@@ -1,4 +1,4 @@
-import { Schema, model, Types, Document } from 'mongoose';
+import mongoose, { Schema, Types, Document } from 'mongoose';
 
 export interface IMessage extends Document {
   conversation: Types.ObjectId;
@@ -19,4 +19,5 @@ const messageSchema = new Schema<IMessage>(
   { timestamps: true }
 );
 
-export default model<IMessage>('Message', messageSchema);
+const Message = mongoose.models.Message || mongoose.model<IMessage>('Message', messageSchema);
+export default Message;

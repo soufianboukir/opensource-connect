@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
 
         if (!recipientId || !message) {
             return NextResponse.json(
-                { message: 'Sender and message are required' },
+                { message: 'Recipient and message are required' },
                 { status: 400 }
             )
         }

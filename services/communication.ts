@@ -6,7 +6,7 @@ export const getConversations = async () =>{
 }
 
 export const getMessagesByConversation = async (conversationId: string,) =>{
-    const response = await api.get(`/messages/${conversationId}`)
+    const response = await api.get(`/messages/byConversation?conversationId=${conversationId}`)
     return response;
 }
 

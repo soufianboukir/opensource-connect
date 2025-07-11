@@ -4,16 +4,18 @@ import Message from '@/models/message.model'
 import { auth } from '@/auth'
 
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { conversationId: string } }
+    req: NextRequest,
 ) {
     try {
         const session = await auth()
         if (!session || !session.user) {
             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
         }
+        
+        const { searchParams } = new URL(req.url)
+        const conversationId = searchParams.get('conversationId')?.trim()
 
-        const { conversationId } = params
+        
         await dbConnection()
 
         const messages = await Message.find({ conversation: conversationId })
@@ -23,7 +25,7 @@ export async function GET(
                                 select: 'name username avatarUrl',
                             })
 
-        return NextResponse.json({ messages }, { status: 200 })
+        return NextResponse.json({ messages })
     } catch (error) {
         console.error('[GET_MESSAGES]', error)
         return NextResponse.json({ message: 'Internal server error' }, { status: 500 })

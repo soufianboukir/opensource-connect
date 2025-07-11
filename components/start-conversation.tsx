@@ -43,7 +43,8 @@ export function StartConversation({ applicationData }: {
     }
     try{
       setLoading(true)
-      const response = await startChating(applicationData.applicant._id,message,applicationData.project?._id)
+      
+      const response = await startChating(applicationData.applicant._id || applicationData.toUser._id,message,applicationData.project?._id)
       if(response.status === 200){
         toast.success('New conversation started successfully!')
       }
