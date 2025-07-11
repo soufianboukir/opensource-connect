@@ -8,6 +8,7 @@ import clsx from 'clsx'
 import moment from 'moment'
 import { ApplicationActionDialog } from './application-actions'
 import { ViewApplication } from './view-application'
+import { StartConversation } from './start-conversation'
 export function ApplicationCard({
   data,
   direction,
@@ -113,7 +114,7 @@ export function ApplicationCard({
       {
         isAccepted && (direction === 'outgoing' || direction === 'incoming') && (
         <div className="flex gap-2 justify-end pt-2 absolute bottom-4 mt-4 right-4">
-                <Button variant="outline" size="sm"><Mail className="w-4 h-4 mr-1" />Message</Button>
+          <StartConversation applicationData={data}/>
         </div>
         )
       }
@@ -122,7 +123,6 @@ export function ApplicationCard({
           <ViewApplication applicationData={data} editable={direction === 'outgoing'} />
           {direction === 'incoming' ? (
             <>
-              <Button variant="outline" size="sm"><Mail className="w-4 h-4 mr-1" />Message</Button>
               <ApplicationActionDialog 
                 actionType="reject"
                 triggerLabel={"Reject"}

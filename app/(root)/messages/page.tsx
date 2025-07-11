@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Avatar } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Search, Send, Trash2 } from 'lucide-react'
@@ -12,13 +12,10 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/app-sidebar'
 import { SiteHeader } from '@/components/ui/site-header'
 import Loading from '@/components/loading'
+import { getConversations } from '@/services/communication'
+import { useSession } from 'next-auth/react'
 
 const defaultImage = 'https://via.placeholder.com/150'
-
-const userData = {
-  id: 'user1',
-  name: 'You',
-}
 
 const exampleConversations = [
   {
@@ -64,15 +61,32 @@ export default function MessagesPage() {
   const [messages, setMessages] = useState(exampleMessages)
   const [loadConvs, setLoadConvs] = useState(false)
   const [loadMssgs, setLoadMssgs] = useState(false)
+  const { data: session, status } = useSession()
 
   const messagesEndRef = useRef(null)
 
   const conversationsToShow = conversations.filter((c) => {
-    const other = c.participants.find((p) => p._id !== userData.id)
+    const other = c.participants.find((p) => p._id !== session?.user.id)
     return other?.name.toLowerCase().includes(query.toLowerCase())
   })
 
-  const otherParticipant = selectedConversation?.participants.find(p => p._id !== userData.id)
+  const fetchConversations = async () =>{
+    try{
+        setLoadConvs(true)
+        const response = await getConversations()
+        console.log(response);
+        
+        if(response.status === 200){
+            setConversations(response.data.conversations)
+        }
+    }catch{
+
+    }finally{
+        setLoadConvs(false)
+    }
+  }
+
+  const otherParticipant = selectedConversation?.participants.find(p => p._id !== session?.user.id)
 
   const sendMessage = () => {
     if (!newMessage.trim()) return
@@ -87,7 +101,6 @@ export default function MessagesPage() {
     setMessages([...messages, newMsg])
     setNewMessage('')
 
-    // Simulate response from other user
     setTimeout(() => {
       const reply = {
         _id: `msg-${Date.now()}-reply`,
@@ -103,9 +116,15 @@ export default function MessagesPage() {
     setMessages(messages.filter((m) => m._id !== id))
   }
 
+  useEffect(() =>{
+    fetchConversations()
+  },[])
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView?.({ behavior: 'smooth' })
   }, [messages])
+
+  if(status === 'loading') return null
 
   return (
 
@@ -128,8 +147,8 @@ export default function MessagesPage() {
                     </div>
 
                     <div className="flex-1 overflow-y-auto custom-scrollbar">
-                    {conversationsToShow.map((conv) => {
-                        const participant = conv.participants.find((p) => p._id !== userData.id)
+                    {conversations.map((conv) => {
+                        const participant = conv.participants.find((p) => p._id !== session?.user.id)
                             return (
                             <div
                                 key={conv._id}
@@ -140,34 +159,29 @@ export default function MessagesPage() {
                                 )}
                                 onClick={() => setSelectedConversation(conv)}
                             >
-                                <Avatar className="w-12 h-12 shadow-md ring-2 ring-blue-300 dark:ring-blue-600">
-                                <Image
-                                width={100}
-                                height={100}
-                                    src={participant?.profilePictureUrl || defaultImage}
-                                    alt="Profile"
-                                    className="w-12 h-12 rounded-full object-cover transition border-2 border-white"
-                                />
+                                <Avatar className="h-12 w-12">
+                                    <AvatarImage src={participant?.avatarUrl} />
+                                    <AvatarFallback>{participant?.name?.charAt(0) || 'U'}</AvatarFallback>
                                 </Avatar>
                                 <div className="flex-1 min-w-0">
-                                <div className="flex justify-between items-center">
-                                    <h3 className="font-semibold truncate">{participant?.name}</h3>
-                                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                                        {moment(conv.updatedAt).fromNow()}
-                                    </span>
-                                </div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                                    {conv.lastMessage}
-                                </div>
+                                    <div className="flex justify-between items-center">
+                                        <h3 className="font-semibold truncate">{participant?.name}</h3>
+                                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                                            {moment(conv.updatedAt).fromNow()}
+                                        </span>
+                                    </div>
+                                    <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                                        {conv.lastMessage.text}
+                                    </div>
                                 </div>
                             </div>
                             )
                     })}
 
                     {loadConvs && <Loading message='Laoding cnversations...'/>}
-                    {conversations.length === 0 && !loadConvs && (
-                        <h1 className="text-xl mt-2 ml-2">No conversations found.</h1>
-                    )}
+                        {conversations.length === 0 && !loadConvs && (
+                            <h1 className="text-xl mt-2 ml-2">No conversations found.</h1>
+                        )}
                     </div>
                 </div>
 
@@ -196,7 +210,7 @@ export default function MessagesPage() {
 
                         <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50 dark:bg-black/60 custom-scrollbar">
                         {messages.map((msg) => {
-                            const isOwnMessage = msg.sender._id === userData.id
+                            const isOwnMessage = msg.sender._id === session?.user.id
                             return (
                             <div key={msg._id} className={cn('flex group', isOwnMessage ? 'justify-end' : 'justify-start')}>
                                 <div
