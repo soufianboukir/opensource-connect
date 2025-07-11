@@ -19,3 +19,8 @@ export const startChating = async (recipientId: string, message: string, project
     const response = await api.post(`/conversations`,{recipientId,message,projectId});
     return response;
 }
+
+export const deleteMessageService = async (messageId: string) =>{
+    const response = await api.delete(`/messages/${messageId}`);
+    return response;
+}

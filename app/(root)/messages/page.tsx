@@ -4,45 +4,39 @@ import { useState, useEffect, useRef } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { ClipboardList, Handshake, Search, Send, Trash2 } from 'lucide-react'
+import { ClipboardList, Handshake, Loader, Search, Send, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import Image from 'next/image'
 import moment from 'moment'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/app-sidebar'
 import { SiteHeader } from '@/components/ui/site-header'
 import Loading from '@/components/loading'
-import { getConversations, getMessagesByConversation } from '@/services/communication'
+import { deleteMessageService, getConversations, getMessagesByConversation, sendMessage } from '@/services/communication'
 import { useSession } from 'next-auth/react'
 import { EmptyState } from '@/components/empty-state'
 import Link from 'next/link'
-
-const defaultImage = 'https://via.placeholder.com/150'
+import { toast } from 'sonner'
+import Pusher from 'pusher-js'
 
 
 export default function MessagesPage() {
   const [query, setQuery] = useState('')
   const [newMessage, setNewMessage] = useState('')
   const [conversations, setConversations] = useState([])
+  const [filteredConversations,setFilteredConversations] = useState([])
+  const conversationsToShow = query ? filteredConversations : conversations;
   const [selectedConversation, setSelectedConversation] = useState(conversations[0])
   const [messages, setMessages] = useState([])
   const [loadConvs, setLoadConvs] = useState(false)
   const [loadMssgs, setLoadMssgs] = useState(false)
+  const [sending,setSending] = useState(false)
   const { data: session, status } = useSession()
-
   const messagesEndRef = useRef(null)
-
-  // const conversationsToShow = conversations.filter((c) => {
-  //   const other = c.participants.find((p) => p._id !== session?.user.id)
-  //   return other?.name.toLowerCase().includes(query.toLowerCase())
-  // })
 
   const fetchConversations = async () =>{
     try{
         setLoadConvs(true)
-        const response = await getConversations()
-        console.log(response);
-        
+        const response = await getConversations()        
         if(response.status === 200){
             setConversations(response.data.conversations)
         }
@@ -52,36 +46,37 @@ export default function MessagesPage() {
         setLoadConvs(false)
     }
   }
-
   
   const otherParticipant = selectedConversation?.participants.find(p => p._id !== session?.user.id)
 
-  const sendMessage = () => {
-    if (!newMessage.trim()) return
-
-    const newMsg = {
-      _id: `msg-${Date.now()}`,
-      sender: { _id: userData.id },
-      text: newMessage.trim(),
-      createdAt: new Date().toISOString(),
+  const sendNewMessage = async () => {
+    if (!newMessage.trim()){
+      toast.error('Please type a message')
+      return
     }
 
-    setMessages([...messages, newMsg])
-    setNewMessage('')
-
-    setTimeout(() => {
-      const reply = {
-        _id: `msg-${Date.now()}-reply`,
-        sender: { _id: otherParticipant._id },
-        text: 'Got it!',
-        createdAt: new Date().toISOString(),
+    try{
+      setSending(true)
+      const response = await sendMessage(selectedConversation._id,newMessage)
+      if(response.status === 200){
+        setNewMessage('')
       }
-      setMessages(prev => [...prev, reply])
-    }, 1000)
+    }catch{
+      toast.success('An error occured')
+    }finally{
+      setSending(false)
+    }
   }
 
   const deleteMessage = (id: string) => {
-    setMessages(messages.filter((m) => m._id !== id))
+    toast.promise(deleteMessageService(id),{
+      loading: 'Deleting...',
+      success: () => {
+        setMessages(messages.filter((m) => m._id !== id))
+        return 'Message delete successfully'
+      },
+      error: (err) => err.data.message
+    })
   }
 
   useEffect(() =>{
@@ -116,6 +111,87 @@ export default function MessagesPage() {
     }
   }, [conversations, selectedConversation])
 
+
+  useEffect(() => {
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
+    })
+  
+    conversations.forEach((conv) => {
+      if (conv?._id) {
+        const channel = pusher.subscribe(`conversation-${conv._id}`)
+  
+        const handleNewMessage = (data: { message: any; conversationId: string }) => {
+          const { message, conversationId } = data
+        
+          const isOwnMessage = message.sender._id === session?.user.id
+        
+          if (!isOwnMessage) {
+            try {
+              const audio = new Audio('/notification-audio.wav')
+              audio.play()
+            } catch (err) {
+              console.error('Failed to play audio', err)
+            }
+          }
+        
+          if (selectedConversation?._id === conversationId) {
+            setMessages((prev) => [...prev, message])
+          }
+        
+          setConversations((prevConvs) => {
+            const updatedConvs = prevConvs.map((conv) =>
+              conv._id === conversationId
+                ? { ...conv, lastMessage: message, updatedAt: message.createdAt }
+                : conv
+            )
+        
+            return updatedConvs.sort(
+              (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+            )
+          })
+        }
+        
+  
+        channel.bind('new-message', handleNewMessage)
+  
+        return () => {
+          channel.unbind('new-message', handleNewMessage)
+          pusher.unsubscribe(`conversation-${conv._id}`)
+        }
+      }
+    })
+  
+    return () => {
+      pusher.disconnect()
+    }
+  }, [conversations, selectedConversation?._id,session?.user.id])
+  
+  useEffect(() => {
+    const searchConv = () => {
+      const lowerTerm = query.toLowerCase();
+  
+      return conversations.filter((conversation) => {
+        const otherParticipant = conversation.participants.find(
+          (p) => p._id !== session?.user.id
+        );
+        if (!otherParticipant) return false;
+  
+        return (
+          otherParticipant.name?.toLowerCase().includes(lowerTerm) ||
+          otherParticipant.username?.toLowerCase().includes(lowerTerm)
+        );
+      });
+    };
+  
+    if (query !== '') {
+      const results = searchConv();
+      setFilteredConversations(results);
+    } else {
+      setFilteredConversations(conversations);
+    }
+  }, [query, conversations, session?.user.id]);
+
   if(status === 'loading') return null
 
   return (
@@ -139,42 +215,49 @@ export default function MessagesPage() {
                     </div>
 
                     <div className="flex-1 overflow-y-auto custom-scrollbar">
-                    {conversations && conversations.map((conv) => {
+                    {conversationsToShow && conversationsToShow.map((conv) => {
                         const participant = conv?.participants?.find((p) => p._id !== session?.user.id)
-                        console.log(conv);
-                        
-                        
                             return (
-                            <div
-                                key={conv._id}
-                                className={cn(
-                                'flex items-center p-4 gap-3 cursor-pointer transition-all duration-200 hover:bg-blue-50 dark:hover:bg-muted/20',
+                              <div
+                              key={conv._id}
+                              className={cn(
+                                'relative flex items-center p-4 gap-3 cursor-pointer transition-all duration-200 hover:bg-blue-50 dark:hover:bg-muted/20',
                                 selectedConversation?._id === conv._id &&
-                                    'bg-blue-100/30 dark:bg-muted/40 border-l-4'
-                                )}
-                                onClick={() => setSelectedConversation(conv)}
+                                  'bg-blue-100/30 dark:bg-muted/40 border-l-4'
+                              )}
+                              onClick={() => setSelectedConversation(conv)}
                             >
-                                <Avatar className="h-12 w-12">
-                                    <AvatarImage src={participant?.avatarUrl} />
-                                    <AvatarFallback>{participant?.name?.charAt(0) || 'U'}</AvatarFallback>
-                                </Avatar>
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex justify-between items-center">
-                                        <h3 className="font-semibold truncate">{participant?.name}</h3>
-                                        <span className="text-xs text-gray-500 dark:text-gray-400">
-                                            {moment(conv.updatedAt).fromNow()}
-                                        </span>
-                                    </div>
-                                    <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                                        {conv?.lastMessage.text}
-                                    </div>
+                              <Avatar className="h-12 w-12">
+                                <AvatarImage src={participant?.avatarUrl} />
+                                <AvatarFallback>{participant?.name?.charAt(0) || 'U'}</AvatarFallback>
+                              </Avatar>
+                            
+                              <div className="flex-1 min-w-0">
+                                <div className="flex justify-between items-center">
+                                  <h3 className="font-semibold truncate">{participant?.name}</h3>
+                                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                                    {moment(conv.updatedAt).fromNow()}
+                                  </span>
                                 </div>
-                            </div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                                  {conv?.lastMessage.text}
+                                </div>
+                              </div>
+                            
+                              
+                              {(conv?.lastMessage?.sender?._id !== session?.user.id && !conv?.lastMessage?.seen) && (
+                                <div className="ml-2">
+                                  <span className="inline-flex items-center justify-center text-xs font-bold text-white bg-blue-500 rounded-full w-3 h-3">
+                                    
+                                  </span>
+                                </div>
+                              )}
+                            </div>                            
                             )
                     })}
 
                     {loadConvs && <Loading message='Laoding cnversations...'/>}
-                        {conversations.length === 0 && !loadConvs && (
+                        {conversationsToShow.length === 0 && !loadConvs && (
                           <EmptyState message='No conversation found' description='Try to propose collaborations to other developers or post projects to get applications'/>
                         )}
                     </div>
@@ -202,13 +285,15 @@ export default function MessagesPage() {
                           </div>
 
                           {selectedConversation?.project && (
-                            <Button
-                              variant="outline"
-                              className="text-sm font-medium dark:hover:bg-muted/30"
-                            >
-                              <ClipboardList />
-                              Project Application
-                            </Button>
+                              <Link href={`/project/${selectedConversation?.project.publicId}`}>
+                                <Button
+                                  variant="outline"
+                                  className="text-sm font-medium dark:hover:bg-muted/30"
+                                >
+                                    <ClipboardList />
+                                    Project Application
+                                </Button>
+                            </Link>
                           )}
                           {!selectedConversation?.project && (
                             <Button
@@ -259,18 +344,20 @@ export default function MessagesPage() {
                         <div className="border-t border-gray-200 dark:border-gray-900 p-4 bg-white dark:bg-black/60">
                             <div className="flex gap-3 items-center">
                                 <Input
-                                placeholder="Type your message..."
-                                value={newMessage}
-                                onChange={(e) => setNewMessage(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                                className="flex-1 rounded-full bg-gray-100 dark:bg-inherit border-3 px-4 py-5 focus:ring-2 focus:ring-blue-500 transition"
+                                  placeholder="Type your message..."
+                                  value={newMessage}
+                                  onChange={(e) => setNewMessage(e.target.value)}
+                                  onKeyDown={(e) => e.key === 'Enter' && sendNewMessage()}
+                                  className="flex-1 rounded-full bg-gray-100 dark:bg-inherit border-3 px-4 py-5 focus:ring-2 focus:ring-blue-500 transition"
                                 />
                                 <Button
-                                onClick={sendMessage}
-                                className="rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg transition disabled:opacity-50"
-                                disabled={!newMessage.trim()}
+                                  onClick={sendNewMessage}
+                                  className="rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg transition disabled:opacity-50"
+                                  disabled={!newMessage.trim() || sending}
                                 >
-                                <Send className="h-5 w-5" />
+                                  {
+                                    sending ? <Loader className='h-5 w-5 animate-spin'/> : <Send className="h-5 w-5" />
+                                  }
                                 </Button>
                             </div>
                         </div>

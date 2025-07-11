@@ -5,6 +5,7 @@ import Conversation from '@/models/conversation.model'
 import Message from '@/models/message.model'
 import User from '@/models/user.model'
 import { Types } from 'mongoose'
+import Project from '@/models/project.model'
 
 export async function GET() {
     try {
@@ -23,6 +24,11 @@ export async function GET() {
                         .populate({
                             path: 'participants',
                             select: 'name username avatarUrl',
+                        })
+                        .populate({
+                            path: 'project',
+                            model: Project,
+                            select: 'publicId'
                         })
                         .populate({
                             path: 'lastMessage',

@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
 
         await pusherServer.trigger(`conversation-${conversationId}`, 'new-message', {
             message: populatedMessage,
+            conversationId
         })
 
         return NextResponse.json({ message: 'Message sent', data: populatedMessage })
