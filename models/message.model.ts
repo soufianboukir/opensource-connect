@@ -4,7 +4,7 @@ export interface IMessage extends Document {
   conversation: Types.ObjectId;
   sender: Types.ObjectId;
   text: string;
-  seenBy: Types.ObjectId[];
+  seen: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -14,7 +14,7 @@ const messageSchema = new Schema<IMessage>(
     conversation: { type: Schema.Types.ObjectId, ref: 'Conversation', required: true },
     sender: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     text: { type: String, required: true },
-    seenBy: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+    seen: {type: Boolean, default: false},
   },
   { timestamps: true }
 );

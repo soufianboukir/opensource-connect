@@ -165,7 +165,7 @@ export function ProjectForm({ projectData, open, onOpenChange, onUpdate, onAdded
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-6">
             <div className="flex flex-col gap-4">
               <Label>Title *</Label>
-              <Input name="title" value={formData.title} onChange={handleChange} placeholder="e.g., AI Code Reviewer"/>
+              <Input name="title" value={formData.title} onChange={handleChange} placeholder="e.g., Are you available for this project?"/>
 
               <Label>Description *</Label>
               <Textarea name="description" value={formData.description} onChange={handleChange} placeholder="Long description about the project..." rows={4} />

@@ -105,7 +105,7 @@ export function SearchBar() {
 
   return (
     <>
-      <p className="md:flex items-center gap-2 text-sm text-muted-foreground hidden">
+      <p className="md:flex items-center gap-2 text-sm text-muted-foreground hidden dark:border-muted border rounded-lg">
         <Input
           onClick={() => setOpen(true)}
           type="text"
