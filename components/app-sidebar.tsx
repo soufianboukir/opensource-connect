@@ -26,6 +26,8 @@ import {
 } from "@/components/ui/sidebar"
 import { useSession } from "next-auth/react"
 import { getUnseenMssgs } from "@/services/communication"
+import Image from "next/image"
+import Link from "next/link"
 
 const data = {
   user: {
@@ -107,15 +109,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Command className="size-4" />
+              <Link href="/">
+                <div className="">
+                    <Image src={'/opensource-connect-logo.png'} width={30} height={30} alt="Platform logo"/>
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">Opensource connect</span>
-                  <span className="truncate text-xs">by <span className="text-blue-600">soufian</span></span>
+                  <span className="truncate text-xs">share,shape,learn faster</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

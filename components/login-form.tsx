@@ -73,9 +73,11 @@ export function LoginForm() {
 
   return (
     <div className={cn("flex flex-col gap-6")}>
-      <div className="flex items-center justify-center">
-        <Image src={'/opensource-connect-logo.png'} width={70} height={70} alt="Platform logo"/>
-       <span className="text-lg font-semibold">Opensource connect</span>
+      <div >
+        <Link href={'/'} className="flex items-center justify-center">
+          <Image src={'/opensource-connect-logo.png'} width={30} height={30} alt="Platform logo"/>
+          <span className="text-lg mt-1 font-semibold ml-2">Opensource connect</span>
+        </Link>
       </div>
       <Card>
         <CardHeader className="text-center">
