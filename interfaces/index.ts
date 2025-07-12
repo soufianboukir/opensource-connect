@@ -84,3 +84,37 @@ export interface Application {
   createdAt: string
   updatedAt: string
 }
+
+
+export interface Message{
+    _id: string;
+    conversation: Conversation;
+    sender: {
+        _id: string,
+        name: string,
+        username: string,
+        avatarUrl: string
+    };
+    text: string;
+    seen: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export interface Conversation {
+  _id: string;
+    participants: {
+      user: {
+        _id: string,
+        name: string,
+        username: string,
+        avatarUrl: string,
+      }[],
+    };
+    project?: {
+        publicId: string
+    };
+    lastMessage?: Message;
+    updatedAt: Date;
+    createdAt: Date;
+}

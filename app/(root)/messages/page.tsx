@@ -17,16 +17,17 @@ import { EmptyState } from '@/components/empty-state'
 import Link from 'next/link'
 import { toast } from 'sonner'
 import Pusher from 'pusher-js'
+import { Conversation, Message } from '@/interfaces'
 
 
 export default function MessagesPage() {
   const [query, setQuery] = useState('')
   const [newMessage, setNewMessage] = useState('')
-  const [conversations, setConversations] = useState([])
-  const [filteredConversations,setFilteredConversations] = useState([])
+  const [conversations, setConversations] = useState<Conversation[]>([])
+  const [filteredConversations,setFilteredConversations] = useState<Conversation[]>([])
   const conversationsToShow = query ? filteredConversations : conversations;
   const [selectedConversation, setSelectedConversation] = useState(conversations[0])
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState<Message[]>([])
   const [loadConvs, setLoadConvs] = useState(false)
   const [loadMssgs, setLoadMssgs] = useState(false)
   const [sending,setSending] = useState(false)
@@ -240,7 +241,7 @@ export default function MessagesPage() {
                                   </span>
                                 </div>
                                 <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                                  {conv?.lastMessage.text}
+                                  {conv?.lastMessage?.text}
                                 </div>
                               </div>
                             

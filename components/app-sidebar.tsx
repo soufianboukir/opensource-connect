@@ -25,6 +25,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { useSession } from "next-auth/react"
+import { getUnseenMssgs } from "@/services/communication"
 
 const data = {
   user: {
@@ -78,6 +79,26 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   
   const { data: session, status } = useSession()
+  const [loading,setLoading] = React.useState(false)
+  const [unseenConvs,setUnseenConvs] = React.useState(0)
+
+  const fetchUnseenMssgs = async () =>{
+    try{
+      setLoading(true)
+      const res = await getUnseenMssgs()
+      if(res.status === 200){
+        setUnseenConvs(res.data.unseenConversations)
+      }
+    }catch{
+      
+    }finally{
+      setLoading(false)
+    }
+  }
+
+  React.useEffect(() =>{
+    fetchUnseenMssgs()
+  },[])
   if(status === 'loading') return null
 
   return (
@@ -100,7 +121,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={data.navMain} unseenConvs={unseenConvs}/>
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

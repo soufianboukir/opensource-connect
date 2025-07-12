@@ -6,7 +6,7 @@ export const getConversations = async () =>{
 }
 
 export const getMessagesByConversation = async (conversationId: string,) =>{
-    const response = await api.get(`/messages/byConversation?conversationId=${conversationId}`)
+    const response = await api.get(`/messages/byConversation?conversationId=${conversationId}`);
     return response;
 }
 
@@ -22,5 +22,10 @@ export const startChating = async (recipientId: string, message: string, project
 
 export const deleteMessageService = async (messageId: string) =>{
     const response = await api.delete(`/messages/${messageId}`);
+    return response;
+}
+
+export const getUnseenMssgs = async () =>{
+    const response = await api.get(`/messages/unseen`);
     return response;
 }

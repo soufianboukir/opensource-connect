@@ -13,6 +13,7 @@ import Link from "next/link"
 
 export function NavMain({
   items,
+  unseenConvs
 }: {
   items: {
     title: string
@@ -23,7 +24,8 @@ export function NavMain({
       title: string
       url: string
     }[]
-  }[]
+  }[],
+  unseenConvs: number
 }) {
   return (
     <SidebarGroup>
@@ -33,10 +35,13 @@ export function NavMain({
           <SidebarMenuItem key={item.title}>
             <SidebarMenuButton asChild tooltip={item.title} className="py-5">
               <Link href={item.url} className="flex items-center justify-between gap-3 w-full">
-                <div className="flex items-center gap-3">
-                  {item.icon && <item.icon className="w-4 h-4" />}
-                  <span>{item.title}</span>
-                </div>
+                  <span className="flex items-center gap-3">
+                    {item.icon && <item.icon className="w-4 h-4" />}
+                    <span>{item.title}</span>
+                  </span>
+                  {
+                    (item.title === 'Messages' && unseenConvs > 0) && <div className="bg-blue-600 rounded-sm px-2 text-xs font-semibold py-0.5">{unseenConvs}</div>
+                  }
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
