@@ -3,7 +3,6 @@
 import * as React from "react"
 import {
   Bot,
-  Command,
   Earth,
   FileText,
   LayoutDashboard,

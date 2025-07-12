@@ -23,8 +23,6 @@ const applicationSchema = new Schema<IApplication>(
     { timestamps: true }
 );
 
-applicationSchema.index({ applicant: 1, project: 1 }, { unique: true });
-
 
 const Application = mongoose.models.Application || mongoose.model<IApplication>('Application', applicationSchema);
 export default Application;

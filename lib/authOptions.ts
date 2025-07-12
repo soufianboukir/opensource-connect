@@ -4,6 +4,7 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import Notification from "@/models/notification.model";
+import { sendRegistrationEmail } from "./mail";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -50,6 +51,8 @@ export const authOptions: NextAuthOptions = {
             ? (profile as any).login
             : profile.email?.split("@")[0],
         });
+
+        await sendRegistrationEmail({toEmail: user.email, name: user.name})
     
         await Notification.create({
           user: user._id,

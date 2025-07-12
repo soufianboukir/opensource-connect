@@ -58,13 +58,18 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ message: 'You already sent an application for this' }, { status: 409 })
         }
 
-        const application = await Application.create({
+        const applicationData: any = {
             applicant: session.user.id,
             toUser,
-            project: project || undefined,
             type,
             message,
-        })
+        }
+        
+        if (project) {
+            applicationData.project = project
+        }
+        
+        const application = await Application.create(applicationData)
 
         await Notification.create({
             user: toUser,
