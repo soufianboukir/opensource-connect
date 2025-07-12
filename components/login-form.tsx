@@ -12,6 +12,7 @@ import {
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import OAuth from "./o-auth";
+import Image from "next/image";
 
 
 export function LoginForm() {
@@ -72,6 +73,10 @@ export function LoginForm() {
 
   return (
     <div className={cn("flex flex-col gap-6")}>
+      <div className="flex items-center justify-center">
+        <Image src={'/opensource-connect-logo.png'} width={70} height={70} alt="Platform logo"/>
+       <span className="text-lg font-semibold">Opensource connect</span>
+      </div>
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>

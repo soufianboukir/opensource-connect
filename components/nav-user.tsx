@@ -3,9 +3,7 @@
 import {
   Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
-  Sparkles,
   User,
 } from "lucide-react"
 
@@ -86,21 +84,10 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
                 <User />
                 <Link href={`/user/${user.username}`}>
                   Profile
                 </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Bell />

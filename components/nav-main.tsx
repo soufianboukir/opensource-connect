@@ -40,7 +40,7 @@ export function NavMain({
                     <span>{item.title}</span>
                   </span>
                   {
-                    (item.title === 'Messages' && unseenConvs > 0) && <div className="bg-blue-600 rounded-sm px-2 text-xs font-semibold py-0.5">{unseenConvs}</div>
+                    (item.title === 'Messages' && unseenConvs > 0) && <div className="bg-blue-600 rounded-sm px-2 text-xs font-semibold py-0.5 text-white">{unseenConvs}</div>
                   }
               </Link>
             </SidebarMenuButton>
