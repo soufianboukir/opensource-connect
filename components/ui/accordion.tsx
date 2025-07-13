@@ -105,7 +105,7 @@ const faqs = [
 ];
 export default function FAQSection() {
   return (
-    <section className="py-24 bg-white dark:bg-muted/10 text-gray-900 dark:text-gray-100">
+    <section className="py-24 bg-white dark:bg-muted/10 text-gray-900 dark:text-gray-100" id="faqs">
       <div className="max-w-4xl mx-auto px-6">
         <h2 className="text-4xl font-bold text-center mb-12">Frequently Asked Questions</h2>
         <Accordion

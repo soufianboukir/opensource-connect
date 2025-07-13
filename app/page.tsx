@@ -27,9 +27,9 @@ export default async function HomePage() {
           </Link>
 
           <nav className='flex gap-10'>
-            <Link href={'/'} className='text-lg font-semibold hover:text-blue-500 duration-200'>Home</Link>
-            <Link href={'/'} className='text-lg font-semibold hover:text-blue-500 duration-200'>How it works?</Link>
-            <Link href={'/'} className='text-lg font-semibold hover:text-blue-500 duration-200'>Faqs</Link>
+            <Link href={'#home'} className='text-lg font-semibold hover:text-blue-500 duration-200'>Home</Link>
+            <Link href={'#how'} className='text-lg font-semibold hover:text-blue-500 duration-200'>How it works?</Link>
+            <Link href={'#faqs'} className='text-lg font-semibold hover:text-blue-500 duration-200'>Faqs</Link>
           </nav>
           <nav className="flex items-center space-x-4">
             <ModeToggle />
@@ -57,7 +57,7 @@ export default async function HomePage() {
         </div>
       </header>
 
-      <section className="relative flex-1 w-full py-20 px-6 bg-gradient-to-b from-white to-gray-50 dark:from-muted/20 dark:to-muted/50 overflow-hidden text-center h-[100vh]">
+      <section className="relative flex-1 w-full py-20 px-6 bg-gradient-to-b from-white to-gray-50 dark:from-muted/20 dark:to-muted/50 overflow-hidden text-center h-[100vh]" id='home'>
           <div className="absolute inset-0 z-0 flex justify-center items-center pointer-events-none">
             <div className="w-[600px] h-[600px] bg-blue-300/20 dark:bg-muted/10 rounded-full blur-3xl scale-150" />
           </div>
@@ -75,7 +75,7 @@ export default async function HomePage() {
             Join <strong className="text-blue-600 dark:text-blue-400">+1000</strong> developers looking for contributors
           </p>
           <p className="font-semibold text-gray-700 dark:text-gray-300 mb-6">
-            Loved by +100 developers
+            Loved developers around the world
           </p>
           
 
@@ -101,13 +101,13 @@ export default async function HomePage() {
             ))}
           </div>
           <button >
-            <Link href={'/login'} className='bg-blue-600 px-4 py-1.5 rounded-sm text-lg text-white flex justify-center items-center mx-auto gap-2 font-semibold mt-6'>
-            Join the community now <MoveRight />
+            <Link href={'/discovery'} className='bg-blue-600 px-4 py-1.5 rounded-sm text-lg text-white flex justify-center items-center mx-auto gap-2 font-semibold mt-6'>
+            Start exploring <MoveRight />
             </Link>
           </button>
       </section>
 
-      <section className="mt-12 px-4 md:px-8 max-w-6xl mx-auto">
+      <section className="mt-12 px-4 md:px-8 max-w-6xl mx-auto" id='how'>
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-10 text-center">
           How It Works
         </h1>
