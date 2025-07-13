@@ -10,8 +10,13 @@ import {
 import Image from 'next/image'
 import { projects } from '@/constants'
 import FAQSection from '@/components/ui/accordion'
+import { auth } from '@/auth'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
-export default function HomePage() {
+export default async function HomePage() {
+
+  const session = await auth()
+  
 
   return (
     <main className="min-h-screen bg-white dark:bg-gray-950 flex flex-col">
@@ -28,12 +33,26 @@ export default function HomePage() {
           </nav>
           <nav className="flex items-center space-x-4">
             <ModeToggle />
-            <Link
-              href="/login"
-              className="px-4 py-1.5 bg-blue-600 text-white rounded-md"
-            >
-              Login
-            </Link>
+            {
+              session?.user ?
+              <Avatar className="h-10 w-10 border-1 border-background shadow-lg object-cover">
+                <AvatarImage
+                  src={session.user.avatarUrl || ""}
+                  alt={session.user.name || "User Avatar"}
+                  
+                />
+                <AvatarFallback className="text-xl font-semibold bg-muted text-muted-foreground">
+                  {session.user.name?.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+              :
+              <Link
+                href="/login"
+                className="px-4 py-1.5 bg-blue-600 text-white rounded-md"
+              >
+                Login
+              </Link>
+            }
           </nav>
         </div>
       </header>
