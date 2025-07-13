@@ -68,14 +68,14 @@ export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
 
 const faqs = [
   {
-    question: 'What is CollabSpace?',
+    question: 'What is Opensource-connect?',
     answer:
-      'CollabSpace is a platform that connects developers with open-source projects and teams actively looking for contributors.',
+      'Opensource-connect is a platform that connects developers with open-source projects and teams actively looking for contributors.',
   },
   {
     question: 'Is it free to use?',
     answer:
-      'Yes, CollabSpace is completely free for both developers and project maintainers.',
+      'Yes, Opensource-connect is completely free for both developers and project maintainers.',
   },
   {
     question: 'Who can join?',
@@ -98,29 +98,14 @@ const faqs = [
       'No. Many projects welcome beginners and label good-first-issue tasks. You can learn and contribute at the same time.',
   },
   {
-    question: 'How do I track my contributions?',
-    answer:
-      'Your GitHub activity and pull requests are automatically recorded. CollabSpace may also display a contribution history on your profile.',
-  },
-  {
     question: 'Can I create my own project and invite contributors?',
     answer:
-      'Yes. Maintainers can list their projects on CollabSpace, define roles they’re looking for, and onboard contributors via GitHub.',
-  },
-  {
-    question: 'How do teams communicate?',
-    answer:
-      'Each project has a dedicated collaboration space. Many teams use Discord, GitHub Discussions, or Slack channels integrated with the project.',
-  },
-  {
-    question: 'Is there support for non-code contributions?',
-    answer:
-      'Yes. We encourage design, documentation, QA testing, and project management roles in addition to development.',
+      'Yes. Maintainers can list their projects on Opensource-connect, define roles they’re looking for, and onboard contributors via GitHub.',
   },
 ];
 export default function FAQSection() {
   return (
-    <section className="py-24 bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+    <section className="py-24 bg-white dark:bg-muted/10 text-gray-900 dark:text-gray-100">
       <div className="max-w-4xl mx-auto px-6">
         <h2 className="text-4xl font-bold text-center mb-12">Frequently Asked Questions</h2>
         <Accordion

@@ -1,16 +1,14 @@
 'use client'
 
-import { AppSidebar } from '@/components/app-sidebar'
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
-import { SiteHeader } from '@/components/ui/site-header'
+import { useRouter } from "next/navigation"
+
 
 export default function ContactPage() {
+  const router = useRouter()
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <SiteHeader title="Support" />
         <section className="max-w-3xl mx-auto p-6">
+            <h1 className="text-3xl font-semibold">Support</h1>
+            <br />
             <p className="text-lg leading-relaxed">
                 If you encounter any issues, have questions, or need assistance regarding any of my projects, feel free to reach out. I{"'"}m always open to supporting users, collaborators, or anyone interested in my work.
                 <br /> <br />
@@ -25,8 +23,12 @@ export default function ContactPage() {
                 </a>
                 , and I do my best to respond promptly and helpfully. Your feedback and inquiries are always welcome and appreciated.
             </p>
-            </section>
-      </SidebarInset>
-    </SidebarProvider>
+            <button
+                onClick={() => router.back()}
+                className="mb-4 text-blue-600 hover:underline dark:text-blue-400 mt-5"
+            >
+                ← Back to previous page
+            </button>
+          </section>
   )
 }

@@ -5,7 +5,8 @@ const nextConfig: NextConfig = {
     domains: [
       "lh3.googleusercontent.com", 
       "avatars.githubusercontent.com",
-      "via.placeholder.com"
+      "via.placeholder.com",
+      "i.pravatar.cc"
     ],
   },
 };
