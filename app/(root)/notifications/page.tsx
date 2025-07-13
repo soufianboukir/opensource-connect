@@ -115,11 +115,9 @@ const NotificationsPage = () => {
                                 return (
                                 <Link
                                     key={notification._id}
-                                    href={notification.link}
+                                    href={notification.link ? notification.link : ''}
                                     className={cn(
                                     `flex items-start gap-4 p-4 rounded-lg border hover:bg-muted transition-colors`,
-                                    // style.color,
-                                    // !notification.read && "ring-1 ring-primary/30"
                                     )}
                                 >
                                     <div className="flex-shrink-0">{style.icon}</div>

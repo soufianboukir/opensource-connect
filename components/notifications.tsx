@@ -75,7 +75,7 @@ export default function Notifications() {
             <div className="max-h-96 overflow-y-auto">
                 {notifications && notifications.map((notification, idx) => (
                     <Link
-                        href={notification.link}
+                        href={notification?.link ? notification.link : ''}
                         key={idx}
                         onClick={notification.link ? () => router.push?.(notification?.link) : () => {}}
                         className={cn(

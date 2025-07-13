@@ -11,14 +11,14 @@ export async function POST(req: NextRequest) {
 
         const transporter = nodemailer.createTransport({
                     service: 'gmail',
-                    auth: {
-                        user: process.env.EMAIL_USER,
-                        pass: process.env.EMAIL_PASS,
-                    },
+                        auth: {
+                            user: process.env.SMTP_MAIL,
+                            pass: process.env.SMTP_PASS,
+                        },
                     })
 
         const mailOptions = {
-            from: `"Feedback Bot" <${process.env.EMAIL_USER}>`,
+            from: `"Feedback Bot" <${process.env.SMTP_MAIL}>`,
             to: process.env.EMAIL_TO,
             subject: `New Feedback Received: ${type}`,
             text: `You received a new feedback.\n\nType: ${type}\nRating: ${rating}/5\n\nMessage:\n${message}`,
