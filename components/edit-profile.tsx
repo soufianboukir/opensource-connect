@@ -90,7 +90,6 @@ export function EditProfile({user} : {user: IUser}) {
                 await update()
                 window.location.reload();
             }
-            
         }catch(error:any){
           if(error.response.data.error){
               toast.error(error.response.data.error)
@@ -127,15 +126,15 @@ export function EditProfile({user} : {user: IUser}) {
               </div>
               <div>
                 <Label htmlFor="username">Username</Label>
-                <Input id="username" name="username" value={formData.username} onChange={handleChange} className="mt-2"/>
+                <Input id="username" name="username" readOnly value={formData.username} onChange={handleChange} className="mt-2"/>
               </div>
               <div>
                 <Label htmlFor="headLine">Headline</Label>
-                <Input id="headLine" name="headLine" value={formData.headLine} onChange={handleChange} className="mt-2"/>
+                <Input id="headLine" name="headLine" value={formData.headLine} placeholder="eg: Fullstack developer" onChange={handleChange} className="mt-2"/>
               </div>
               <div>
                 <Label htmlFor="bio">Bio</Label>
-                <Textarea id="bio" name="bio" rows={3} value={formData.bio} onChange={handleChange} className="mt-2"/>
+                <Textarea id="bio" name="bio" placeholder="long description about you" rows={3} value={formData.bio} onChange={handleChange} className="mt-2"/>
               </div>
               <div>
                 <Label htmlFor="avatar">Avatar Image</Label>
@@ -152,11 +151,11 @@ export function EditProfile({user} : {user: IUser}) {
             <div className="flex flex-col gap-4">
               <div>
                 <Label htmlFor="githubUrl">GitHub/Gitlab URL</Label>
-                <Input id="githubUrl" onChange={handleChange} value={formData.githubUrl} name="githubUrl" className="mt-2"/>
+                <Input id="githubUrl" onChange={handleChange} placeholder="https://github.com/yourusername" value={formData.githubUrl} name="githubUrl" className="mt-2"/>
               </div>
               <div>
                 <Label htmlFor="websiteUrl">Website URL</Label>
-                <Input id="websiteUrl" onChange={handleChange} value={formData.websiteUrl} name="websiteUrl" className="mt-2"/>
+                <Input id="websiteUrl" onChange={handleChange} placeholder="https://yoursite.com" value={formData.websiteUrl} name="websiteUrl" className="mt-2"/>
               </div>
 
               <div>
