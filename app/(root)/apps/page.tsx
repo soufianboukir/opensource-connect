@@ -49,7 +49,7 @@ export default function ApplicationsPage() {
             !loading && (incoming.length === 0 && outgoing.length === 0) && <EmptyState message='No applications found' 
             description='Try to apply to projects, or propose collaboration to developers' 
             action={<Button className='bg-blue-600 dark:bg-blue-600 hover:bg-blue-700 text-white'>
-              <Link href={'/discovery'} className='flex gap-3 items-center'>Explore projects <SquareArrowOutUpRight className='w-4 h-4'/></Link>
+              <Link href={'/discovery'} className='flex gap-3 items-center text-white'>Explore projects <SquareArrowOutUpRight className='w-4 h-4'/></Link>
             </Button>}/>
           }
           {

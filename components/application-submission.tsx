@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Send } from "lucide-react"
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip"
 import { Textarea } from "./ui/textarea"
 import { useState } from "react"
 import { sendApplication } from "@/services/application"
@@ -56,18 +55,10 @@ export function ApplicationSubmission({ proposeCollaboration, project, toUser }:
                     <Button className="bg-blue-600 dark:bg-blue-600 text-white hover:bg-blue-700">
                         Propose collaboration
                     </Button> 
-                    : <button>
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <div className="w-9 h-9 rounded-full border flex items-center justify-center bg-gray-100 dark:bg-muted/50 cursor-pointer">
-                                    <Send className="w-4 h-4 text-gray-500 dark:text-gray-200"/>
-                                </div>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                Apply to this project
-                            </TooltipContent>
-                        </Tooltip>
-                    </button> 
+                    : 
+                    <div className="w-9 h-9 rounded-full border flex items-center justify-center bg-gray-100 dark:bg-muted/50 cursor-pointer">
+                        <Send className="w-4 h-4 text-gray-500 dark:text-gray-200"/>
+                    </div>
                 }
                 
             </DialogTrigger>

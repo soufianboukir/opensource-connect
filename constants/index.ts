@@ -7,7 +7,7 @@ export const techs = [
     "docker", "kubernetes", "aws", "azure", "gcp", "firebase", "heroku",
     "graphql", "apollo", "relay", "tailwindcss", "bootstrap", "foundation",
     "materialui", "chakraui", "antdesign", "bulma", "semanticui", "sass", "less",
-    "webpack", "rollup", "parcel", "vite", "babel", "eslint", "prettier",
+    "webpack", "rollup","ejs", "parcel", "vite", "babel", "eslint", "prettier",
     "jest", "mocha", "chai", "cypress", "selenium", "puppeteer", "playwright",
     "git", "github", "gitlab", "bitbucket", "linux", "windows", "macos",
     "npm", "yarn", "pnpm", "vscode", "vim", "emacs", "atom",

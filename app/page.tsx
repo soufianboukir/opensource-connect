@@ -35,13 +35,13 @@ export default async function HomePage() {
             <ModeToggle />
             {
               session?.user ?
-              <Avatar className="h-10 w-10 border-1 border-background shadow-lg object-cover">
+              <Avatar className="h-10 w-10 border-2 shadow-lg object-cover border-white">
                 <AvatarImage
                   src={session.user.avatarUrl || ""}
                   alt={session.user.name || "User Avatar"}
-                  
+                  className='border-2 border-white'
                 />
-                <AvatarFallback className="text-xl font-semibold bg-muted text-muted-foreground">
+                <AvatarFallback className="text-xl font-semibold bg-muted text-muted-foreground border-2 border-white">
                   {session.user.name?.charAt(0)}
                 </AvatarFallback>
               </Avatar>
