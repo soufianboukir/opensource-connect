@@ -80,7 +80,7 @@ export default async function HomePage() {
           
 
 
-          <div className='grid md:grid-cols-3 grid-cols-2 lg:grid-cols-5 w-[90%] md:w-[70%] mx-auto gap-2 flex-wrap mt-8 text-left'>
+          <div className='grid md:grid-cols-3 grid-cols-2 lg:grid-cols-5 w-[90%] md:w-[80%] mx-auto gap-2 flex-wrap mt-8 text-left'>
             {projects.map((project, i) => (
               <div key={i} className="rounded-xl border dark:border-gray-700 p-6 bg-white dark:bg-muted/20 shadow-md">
                 <div className="flex items-center gap-2 mb-4">
