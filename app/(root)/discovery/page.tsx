@@ -108,7 +108,6 @@ export default function Page() {
             {
               (loading && page === 1) && <Loading message="Loading, please wait..." />
             }
-            {status === 'loading' && <Loading message="Loading, please wait..." />}
             {loading && page > 1 && (
               <div className="text-center text-muted-foreground text-sm py-4">Loading more projects...</div>
             )}

@@ -14,7 +14,7 @@ export function ProjectPreview({projectData, handleUnsave} : {projectData: Proje
     <div className="relative hover:bg-muted/20 duration-200 cursor-pointer hover:rounded-2xl border-b border-b-muted/80 p-6 transition-all hover:shadow-sm">
         <div className="flex justify-between">
             <div className="flex items-center gap-2">
-                <Avatar className="w-[35px] h-[35px]">
+                <Avatar className="w-[35px] h-[35px] border border-gray-600">
                     <AvatarImage src={projectData.owner?.avatarUrl} />
                     <AvatarFallback>{projectData.owner?.name.charAt(0)}</AvatarFallback>
                 </Avatar>

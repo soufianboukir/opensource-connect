@@ -11,7 +11,7 @@ import { SiteHeader } from '@/components/ui/site-header';
 import { ProjectFilters } from '@/components/project-filters';
 import { Metadata } from 'next';
 import { ProjectActions } from '@/components/apply-save-status';
-
+import User from '@/models/user.model';
 interface ProjectPageProps {
   params: { publicId: string };
 }

@@ -19,7 +19,7 @@ import { sendApplication } from "@/services/application"
 import { toast } from "sonner"
 
 export function ApplicationSubmission({ proposeCollaboration, project, toUser }: {proposeCollaboration?: boolean, project?: string, toUser?: string}) {
-    const [loading,setLoading] = useState(false)
+    const [loading,setLoading] = useState(false);
     const [message,setMessage] = useState<string>('');
 
     const handleSubmit = async () =>{
