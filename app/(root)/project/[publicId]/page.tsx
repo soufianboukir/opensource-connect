@@ -11,13 +11,13 @@ import { SiteHeader } from '@/components/ui/site-header';
 import { ProjectFilters } from '@/components/project-filters';
 import { Metadata } from 'next';
 import { ProjectActions } from '@/components/apply-save-status';
-import User from '@/models/user.model';
 interface ProjectPageProps {
   params: { publicId: string };
 }
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
   await dbConnection();
+  await import('@/models/user.model');
   const project: ProjectInterface | null = await Project.findOne({ publicId: params.publicId })
                       .populate('owner', 'username name avatarUrl headLine')
                       .lean();
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   await dbConnection();
-
+  await import('@/models/user.model');
   const project: ProjectInterface | null = await Project.findOne({ publicId: params.publicId })
                       .populate('owner', 'username name avatarUrl headLine')
                       .lean();
