@@ -17,7 +17,6 @@ export default async function HomePage() {
 
   const session = await auth()
   
-
   return (
     <main className="min-h-screen bg-white dark:bg-gray-950 flex flex-col">
       <header className="w-full border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-black backdrop-blur sticky top-0 z-50">
@@ -26,7 +25,7 @@ export default async function HomePage() {
             <Image src={'/opensource-connect-logo.png'} width={40} height={40} alt='Opensource connect'/>
           </Link>
 
-          <nav className='flex gap-10'>
+          <nav className='hidden gap-10 md:flex'>
             <Link href={'#home'} className='text-lg font-semibold hover:text-blue-500 duration-200'>Home</Link>
             <Link href={'#how'} className='text-lg font-semibold hover:text-blue-500 duration-200'>How it works?</Link>
             <Link href={'#faqs'} className='text-lg font-semibold hover:text-blue-500 duration-200'>Faqs</Link>
@@ -83,7 +82,7 @@ export default async function HomePage() {
           
 
 
-          <div className='grid md:grid-cols-3 grid-cols-2 lg:grid-cols-5 w-[90%] md:w-[80%] mx-auto gap-2 flex-wrap mt-8 text-left'>
+          <div className='grid md:grid-cols-3 grid-cols-1 lg:grid-cols-5 w-[90%] md:w-[80%] mx-auto gap-2 flex-wrap mt-8 text-left'>
             {projects.map((project, i) => (
               <div key={i} className="rounded-xl border dark:border-gray-700 p-6 bg-white dark:bg-muted/20 shadow-md">
                 <div className="flex items-center gap-2 mb-4">
