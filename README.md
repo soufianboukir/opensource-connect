@@ -6,7 +6,7 @@
 
 ## Tech Stack
 
-- **Framework:** Next.js 15 (App Router)
+- **Framework:** Next.js 15
 - **Language:** TypeScript
 - **Database:** MongoDB (via Mongoose)
 - **Authentication:** NextAuth (Github + Google OAuth)
