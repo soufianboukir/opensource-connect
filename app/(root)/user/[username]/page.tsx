@@ -73,7 +73,7 @@ export default async function UserProfile({ params }: UserProfileProps) {
 
           <div className="mt-20">
             <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-              {user.name || "No Name"} | {user.headLine || "Next.js Developer"}
+              {user.name || "No Name"} | {user.headLine || "headline not setted yet"}
             </h1>
             <p className="text-muted-foreground">
               @{user.username || "unknown"}
