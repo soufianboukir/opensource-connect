@@ -38,7 +38,7 @@
 ## Installation
 1. Clone the repository and install dependecies
   ```
-    git clone https://github.com/sofyanBoukir/opensource-connect.git
+    git clone https://github.com/soufianboukir/opensource-connect.git
     cd opensource-connect
     npm install
   ```
