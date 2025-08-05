@@ -125,12 +125,11 @@ export async function sendRegistrationEmail({
                 </div>
 
                 <p style="font-size: 14px; color: #6b7280;">
-                If you have any questions, feel free to contact our support team.
+                If you have any questions, feel free to contact our support team <a href="${process.env.NEXT_PUBLIC_APP_URL}/support" style="color:blue;">support</a>.
                 </p>
 
                 <p style="font-size: 16px; margin-top: 30px;">
-                Best regards,<br/>
-                The Opensource-connect Team
+                Best regards, soufian<br/>
                 </p>
             </div>
             </div>

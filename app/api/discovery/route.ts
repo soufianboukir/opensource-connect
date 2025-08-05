@@ -5,7 +5,6 @@ import { NextResponse } from 'next/server'
 export async function GET(req: Request) {
     try {
         await dbConnection()
-
         const { searchParams } = new URL(req.url)
 
         const status = searchParams.get('status')

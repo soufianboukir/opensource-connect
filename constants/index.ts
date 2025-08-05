@@ -81,7 +81,7 @@ export const projects = [
     },
     {
       title: "GreenDash",
-      description: "An eco-friendly dashboard template focused on environmental analytics and carbon tracking.",
+      description: "An eco-friendly dashboard template focused on environmental analytics.",
       username: "niss_js",
       avatar: "https://i.pravatar.cc/150?img=29",
     },
@@ -108,66 +108,6 @@ export const projects = [
       description: "Collaborative markdown editor with live preview and export to PDF/HTML.",
       username: "karima_nodes",
       avatar: "https://i.pravatar.cc/150?img=36",
-    },
-    {
-      title: "BugHunter Tracker",
-      description: "An open bug tracker system with tagging, severity scoring, and dev auto-assignment.",
-      username: "jack.ts",
-      avatar: "https://i.pravatar.cc/150?img=8",
-    },
-    {
-      title: "StackClone",
-      description: "A Q&A site inspired by StackOverflow, built entirely with Next.js and Supabase.",
-      username: "steven_01",
-      avatar: "https://i.pravatar.cc/150?img=10",
-    },
-    {
-      title: "DevStreamify",
-      description: "Stream your coding sessions or tech talks directly to your audience with chat integration.",
-      username: "sen002",
-      avatar: "https://i.pravatar.cc/150?img=17",
-    },
-    {
-      title: "CodeNotes",
-      description: "Create, tag, and organize development notes with syntax highlighting.",
-      username: "alexandra03",
-      avatar: "https://i.pravatar.cc/150?img=48",
-    },
-    {
-      title: "OpenForms Builder",
-      description: "Drag-and-drop form builder with validation, analytics, and backend-free submission.",
-      username: "imane_ui",
-      avatar: "https://i.pravatar.cc/150?img=5",
-    },
-    {
-      title: "JobTrackr",
-      description: "Track job applications, interviews, and offers with analytics and reminders.",
-      username: "stevan1",
-      avatar: "https://i.pravatar.cc/150?img=38",
-    },
-    {
-      title: "Daily DevTips",
-      description: "Open collection of coding tips and tricks with community submissions and voting.",
-      username: "ayoub_labs",
-      avatar: "https://i.pravatar.cc/150?img=14",
-    },
-    {
-      title: "OpenPortfolio",
-      description: "A beautiful developer portfolio template with blog, projects, and resume sections.",
-      username: "yass_uiux",
-      avatar: "https://i.pravatar.cc/150?img=26",
-    },
-    {
-      title: "API PlayGround",
-      description: "Test, share, and document public APIs with automatic code snippets and history tracking.",
-      username: "latifa_api",
-      avatar: "https://i.pravatar.cc/150?img=20",
-    },
-    {
-      title: "DesignTokens Toolkit",
-      description: "Manage and sync design tokens across design tools and codebases using JSON.",
-      username: "h012ff",
-      avatar: "https://i.pravatar.cc/150?img=15",
     },
   ]
   

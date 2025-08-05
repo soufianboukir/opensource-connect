@@ -90,41 +90,46 @@ export default async function UserProfile({ params }: UserProfileProps) {
               </span>
             </div>
 
-            <div className="flex items-center md:flex-row flex-col justify-center gap-10 mt-6">
-              <span className="flex items-center gap-2 font-semibold justify-center">
-                <Cake  className="w-6 h-6"/> 
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-6 text-sm text-gray-800 dark:text-gray-200">
+              <div className="flex items-center gap-2 font-medium">
+                <Cake className="w-5 h-5" />
                 <span>
-                  Joined on {user.createdAt
-                  ? new Date(user.createdAt).toLocaleDateString()
-                  : "N/A"}
+                  Joined on{" "}
+                  {user.createdAt
+                    ? new Date(user.createdAt).toLocaleDateString()
+                    : "N/A"}
                 </span>
-              </span>
-              <span className="flex items-center gap-2 font-semibold justify-center">
-                {
-                  user.websiteUrl && (
-                    <>
-                      <Earth  className="w-6 h-6"/> 
-                      <Link href={"https://soufianboukir.com"} className="hover:text-blue-500">
-                        {user.websiteUrl || 'https://soufianboukir.com'}
-                      </Link>
-                    </>
-                  )
-                }
-              </span>
+              </div>
 
-              <span className="flex items-center gap-2 font-semibold justify-center">
-                {
-                  user.githubUrl && (
-                    <>
-                      <Github  className="w-6 h-6"/> 
-                      <Link href={"https://github.com/soufianboukir"} className="hover:text-blue-500">
-                        {user.githubUrl || 'https://github.com/soufianboukir'}
-                      </Link>
-                    </>
-                  )
-                }
-              </span>
+              {user.websiteUrl && (
+                <div className="flex items-center gap-2 font-medium">
+                  <Earth className="w-5 h-5" />
+                  <Link
+                    href={user.websiteUrl}
+                    className="hover:text-blue-600 truncate max-w-[200px]"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {user.websiteUrl}
+                  </Link>
+                </div>
+              )}
+
+              {user.githubUrl && (
+                <div className="flex items-center gap-2 font-medium">
+                  <Github className="w-5 h-5" />
+                  <Link
+                    href={user.githubUrl}
+                    className="hover:text-blue-600 truncate max-w-[200px]"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {user.githubUrl}
+                  </Link>
+                </div>
+              )}
             </div>
+
 
 
             {user.bio && (
