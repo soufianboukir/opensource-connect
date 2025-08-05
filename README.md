@@ -6,7 +6,7 @@
 
 ## Tech Stack
 
-- **Framework:** Next.js 15 (App Router)
+- **Framework:** Next.js 15
 - **Language:** TypeScript
 - **Database:** MongoDB (via Mongoose)
 - **Authentication:** NextAuth (Github + Google OAuth)
@@ -38,7 +38,7 @@
 ## Installation
 1. Clone the repository and install dependecies
   ```
-    git clone https://github.com/sofyanBoukir/opensource-connect.git
+    git clone https://github.com/soufianboukir/opensource-connect.git
     cd opensource-connect
     npm install
   ```
