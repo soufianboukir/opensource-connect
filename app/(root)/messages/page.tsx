@@ -275,7 +275,7 @@ export default function MessagesPage() {
                             </Avatar>
                             <div>
                               <div className="font-semibold text-lg">
-                                <Link href={`/user/${otherParticipant.username}`} className='hover:text-sky-700 duration-200'>  
+                                <Link href={`/user/${otherParticipant?.username || 'unknown'}`} className='hover:text-sky-700 duration-200'>  
                                   {otherParticipant?.name}
                                 </Link>
                               </div>

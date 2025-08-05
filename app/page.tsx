@@ -12,6 +12,7 @@ import { BackgroundBeamsWithCollision } from '@/components/ui/background-beams-w
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { HoverEffect } from '@/components/ui/card-hover-effect'
+import Loading from '@/components/loading'
 
 const steps = [
   {
@@ -50,7 +51,7 @@ export default function HomePage() {
 
   const { data: session, status } = useSession()
 
-  if(status === 'loading') return null
+  if(status === 'loading') return <Loading message='Loading. please wait...' />
 
   return (
     <main className="min-h-screen bg-white dark:bg-gray-950 flex flex-col">
