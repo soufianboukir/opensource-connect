@@ -138,7 +138,7 @@ export default function HomePage() {
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
                   {index + 1}. {step.title}
                 </h2>
-                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed line-clamp-3">
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
                   {step.description}
                 </p>
               </div>
