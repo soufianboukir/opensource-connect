@@ -134,15 +134,25 @@ export function ProjectForm({ projectData, open, onOpenChange, onUpdate, onAdded
 
   return (
     <Dialog open={open} onOpenChange={() => onOpenChange?.({ open: false, projectData: {title:'',description:'',githubUrl:'',websiteUrl:'',status:'active',tags:[],rolesNeeded:[],techStackNeeded:[]} })}>
-      {
-        !open && (
+      {!open && (
+        <>
           <DialogTrigger asChild>
-            <Button className="bg-blue-600 flex items-center gap-2 rounded-xl px-4 py-2 text-white font-semibold hover:bg-blue-700">
-              <Plus className={`w-4 h-4 ${open ? 'hidden' : null}`} /> Submit a project
+            <Button className="lg:flex hidden bg-blue-600 items-center gap-2 rounded-xl px-4 py-2 text-white font-semibold hover:bg-blue-700">
+              <Plus className="w-4 h-4" />
+              Submit a project
             </Button>
           </DialogTrigger>
-        )
-      }
+
+          <DialogTrigger asChild>
+            <Button className="lg:hidden bg-blue-600 flex items-center gap-2 rounded-xl px-4 py-2 text-white font-semibold hover:bg-blue-700">
+              <Plus className="w-4 h-4" />
+            </Button>
+          </DialogTrigger>
+        </>
+      )}
+
+
+
       <DialogContent className="sm:max-w-4xl overflow-auto max-h-[800px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>

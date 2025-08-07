@@ -110,7 +110,7 @@ export function SearchBar() {
           onClick={() => setOpen(true)}
           type="text"
           placeholder="Search for projects or developers..."
-          className="w-[300px] px-3 py-1.5 rounded-md text-sm border border-muted bg-muted/20 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition cursor-pointer"
+          className="lg:w-[300px] md:w-[200px] px-3 py-1.5 rounded-md text-sm border border-muted bg-muted/20 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition cursor-pointer"
         />
       </p>
 

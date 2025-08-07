@@ -71,8 +71,8 @@ export default function Page() {
             <AppSidebar />
             <SidebarInset>
                 <SiteHeader title="Saved projects" />
-                <div className="flex flex-col-reverse md:flex-row p-4 gap-4">
-                    <div className="md:w-[75%] w-[100%] space-y-4">
+                <div className="flex flex-col-reverse xl:flex-row p-4 gap-4">
+                    <div className="xl:w-[75%] w-[100%] space-y-4">
                         {projects.length > 0 ? (
                             projects.map(project => (
                                 <ProjectPreview key={project._id} projectData={project} handleUnsave={handleUnSave}/>

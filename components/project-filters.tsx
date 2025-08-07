@@ -43,7 +43,7 @@ export function ProjectFilters({ onFilterChange }: { onFilterChange?: (filters: 
     }
 
     return (
-        <div className="md:w-[25%] p-4 space-y-4 bg-transparent md:sticky top-20 h-fit">
+        <div className="xl:w-[25%] mx-auto w-[80%] p-4 space-y-4 bg-transparent xl:sticky top-20 h-fit">
             <div className="flex flex-col gap-1">
                 <Label>Status</Label>
                 <Select value={status} onValueChange={setStatus}>
