@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useSession } from 'next-auth/react'
 
 import { AppSidebar } from "@/components/app-sidebar"
 import Loading from "@/components/loading"
@@ -20,7 +19,6 @@ import { api } from '@/config/api'
 
 
 export default function Page() {
-  const { status } = useSession()
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [totalProjects,setTotalProjects] = useState(0);

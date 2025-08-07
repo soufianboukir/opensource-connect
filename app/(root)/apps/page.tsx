@@ -66,7 +66,7 @@ export default function ApplicationsPage() {
                                     {incoming.length === 0 ? (
                                         <EmptyState message='No icoming applications' description='Try to post projects to get applications'/>
                                     ) : (
-                                        <div className="grid md:grid-cols-2 3xl:grid-cols-4 grid-cols-1 lg:grid-cols-3 gap-3">
+                                        <div className="grid md:grid-cols-1 3xl:grid-cols-4 grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 gap-3">
                                             {incoming.map(app => (
                                                 <ApplicationCard key={app._id} data={app} direction="incoming" />
                                             ))}
@@ -79,7 +79,7 @@ export default function ApplicationsPage() {
                                     {outgoing.length === 0 ? (
                                         <EmptyState message='No outgoing applications' description='Try to apply to projects or propose a collaboration to developers'/>
                                     ) : (
-                                        <div className="grid md:grid-cols-2 3xl:grid-cols-4 grid-cols-1 lg:grid-cols-3 gap-3">
+                                        <div className="grid md:grid-cols-1 3xl:grid-cols-4 grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 gap-3">
                                             {outgoing.map(app => (
                                                 <ApplicationCard key={app._id} data={app} direction="outgoing" />
                                             ))}

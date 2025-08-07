@@ -15,7 +15,7 @@ export const SiteHeader = ({ title }: { title: string }) => {
                 <div className="flex items-center">
                     <SidebarTrigger className="-ml-1" />
                     <Separator orientation="vertical" className="mr-2 h-4" />
-                    <span className="md:text-xl text-sm font-semibold">{title}</span>
+                    <span className="xl:text-xl lg:text-lg text-sm font-semibold">{title}</span>
                 </div>
         
                 <div className="flex-1 flex justify-center">
