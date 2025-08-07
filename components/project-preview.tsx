@@ -11,7 +11,7 @@ import { ProjectActions } from "./apply-save-status"
 
 export function ProjectPreview({projectData, handleUnsave} : {projectData: Project, handleUnsave?: (projectId: string) => void}) {
   return (
-    <div className="relative hover:bg-muted/20 duration-200 cursor-pointer hover:rounded-2xl border-b border-b-muted/80 p-6 transition-all hover:shadow-sm">
+    <div className="relative hover:bg-muted/20 duration-200 cursor-pointer hover:rounded-2xl border-b border-b-muted/80 px-1 py-6 transition-all hover:shadow-sm">
         <div className="flex justify-between">
             <div className="flex items-center gap-2">
                 <Avatar className="w-[35px] h-[35px] border border-gray-600">

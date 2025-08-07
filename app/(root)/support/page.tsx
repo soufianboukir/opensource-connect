@@ -21,7 +21,7 @@ export default function ContactPage() {
                 >
                     soufianeboukir0@gmail.com
                 </a>
-                , and I do my best to respond promptly and helpfully. Your feedback and inquiries are always welcome and appreciated.
+                , and I do my best to respond promptly and helpfully.
             </p>
             <button
                 onClick={() => router.back()}

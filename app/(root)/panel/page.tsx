@@ -79,7 +79,7 @@ export default function Page() {
       <AppSidebar />
       <SidebarInset>
         <SiteHeader title={'Panel'}/>
-        <div className="grid md:grid-cols-2 grid-cols-1 lg:grid-cols-3 p-4 gap-4">
+        <div className="grid md:grid-cols-1 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 p-4 gap-4">
           {
             !isLoading && projects && projects.length ? (
               projects.map((project,index) => (

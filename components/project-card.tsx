@@ -17,7 +17,7 @@ export const ProjectCard = ({ projectData, onOpenDelete, onOpenUpdate }:
 
     
     return (
-        <div className='group relative overflow-hidden dark:bg-muted/20 px-2 py-4 rounded-md hover:shadow-lg transition-all duration-300 border dark:border-muted dark:hover:border-white/20 hover:border-primary/30 bg-gray-100 border-gray-200'>
+        <div className='group relative overflow-hidden dark:bg-muted/20 px-6 py-4 rounded-md hover:shadow-lg transition-all duration-300 border dark:border-muted dark:hover:border-white/20 hover:border-primary/30 bg-gray-100 border-gray-200'>
             <div className='flex justify-between items-start gap-4'>
                 <div className='flex-1'>
                     <div className='flex flex-col'>

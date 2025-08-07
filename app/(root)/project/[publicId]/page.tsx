@@ -60,7 +60,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 <div>
                     <Link
                       href={`/user/${project.owner?.username}`}
-                      className="text-blue-600 dark:text-blue-400 font-medium hover:underline"
+                      className="font-medium hover:underline"
                     >
                       {project.owner?.name}
                     </Link>
@@ -75,7 +75,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             {project.githubUrl && (
               <p className="mt-2 text-sm">
                 GitHub:{" "}
-                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
                   {project.githubUrl.replace(/^https?:\/\//, '')}
                 </a>
               </p>
@@ -83,7 +83,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             {project.websiteUrl && (
               <p className="mt-2 text-sm">
                 Website:{" "}
-                <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
                   {project.websiteUrl.replace(/^https?:\/\//, '')}
                 </a>
               </p>
@@ -105,23 +105,31 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               </div>
             </div>
 
-            <div className="mt-6">
-              <h3 className="text-lg font-medium mb-2">Tags</h3>
-              <div className="flex flex-wrap gap-2">
-                {project.tags.map((tag: string, idx: number) => (
-                  <span key={idx} className="text-xs text-muted-foreground">#{tag}</span>
-                ))}
-              </div>
-            </div>
+            {
+              project.tags.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-medium mb-2">Tags</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.map((tag: string, idx: number) => (
+                      <span key={idx} className="text-xs text-muted-foreground">#{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              )
+            }
 
-            <div className="mt-6">
-              <h3 className="text-lg font-medium mb-2">Roles Needed</h3>
-              <ul className="list-disc list-inside text-muted-foreground">
-                {project.rolesNeeded.map((role: { role: string; count: number }, idx: number) => (
-                  <li key={idx}>{role.role}: {role.count}</li>
-                ))}
-              </ul>
-            </div>
+            {
+              project.rolesNeeded.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-medium mb-2">Roles Needed</h3>
+                  <ul className="list-disc list-inside text-muted-foreground">
+                    {project.rolesNeeded.map((role: { role: string; count: number }, idx: number) => (
+                      <li key={idx}>{role.role}: {role.count}</li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            }
 
             <p className="mt-6 text-sm text-muted-foreground">
               Posted on {new Date(project?.createdAt).toLocaleDateString()}
