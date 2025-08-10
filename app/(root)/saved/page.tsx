@@ -16,6 +16,7 @@ import { SiteHeader } from "@/components/ui/site-header"
 import { Project } from '@/interfaces'
 import { EmptyState } from '@/components/empty-state'
 import { getSavedProjects } from '@/services/project'
+import { ProjectFiltersType } from '../discovery/page'
 
 
 export default function Page() {
@@ -52,7 +53,7 @@ export default function Page() {
     }
 
     
-    const handleFilterChange = (newFilters: any) => {
+    const handleFilterChange = (newFilters: ProjectFiltersType) => {
         const isDifferent =
         newFilters.status !== filters.status ||
         newFilters.sort !== filters.sort ||

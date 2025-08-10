@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { dbConnection } from "@/config/db";
 import Project from "@/models/project.model";
 import User from "@/models/user.model";
+import { sendNewProjectSubmissionMssg } from "@/lib/mail";
 
 
 
@@ -35,50 +36,67 @@ export async function GET() {
 
 
 export async function POST(req: Request) {
-    await dbConnection();
-    const session = await auth()
+  await dbConnection();
+  const session = await auth();
 
-    if (!session?.user?.email) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session?.user?.email) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const {
+      title,
+      description,
+      githubUrl,
+      websiteUrl,
+      status,
+      techStackNeeded,
+      rolesNeeded,
+      tags,
+    } = await req.json();
+
+    if (!title || !Array.isArray(techStackNeeded) || !description) {
+      return NextResponse.json(
+        { error: "Missing or invalid required fields" },
+        { status: 400 }
+      );
     }
 
-    try {
-        const {
-            title,
-            description,
-            githubUrl,
-            websiteUrl,
-            status,
-            techStackNeeded,
-            rolesNeeded,
-            tags,
-        } = await req.json();
-                
+    const newProject = await Project.create({
+      title,
+      description,
+      githubUrl: githubUrl || "",
+      websiteUrl: websiteUrl || "",
+      status: status || "active",
+      techStackNeeded,
+      rolesNeeded,
+      tags: tags || [],
+      owner: session.user.id,
+    });
 
-        if (!title || !Array.isArray(techStackNeeded) || !description) {
-            return NextResponse.json(
-                { error: "Missing or invalid required fields" },
-                { status: 400 }
-            );
-        }
-    
-        const newProject = await Project.create({
-            title,
-            description: description,
-            githubUrl: githubUrl || "",
-            websiteUrl: websiteUrl || "",
-            status: status || "active",
-            techStackNeeded,
-            rolesNeeded,
-            tags: tags || [],
-            owner: session.user.id,
+    const usersToNotify = await User.aggregate([
+      { $match: { _id: { $ne: newProject.owner } } },
+      { $sample: { size: 30 } },
+      { $project: { email: 1, name: 1 } },
+    ]);
+
+    usersToNotify.forEach(async (user: { email: string; name: string }) => {
+      try {
+        await sendNewProjectSubmissionMssg({
+          toEmail: user.email,
+          name: user.name || 'Developer',
+          projectTitle: newProject.title,
         });
-    
-        return NextResponse.json(newProject);
-    } catch (error) {
-        return NextResponse.json(
-            { error: "Failed to create project", details: error },
-            { status: 500 }
-        );
-    }
+      } catch (err) {
+        console.error(`Failed to send project notification to ${user.email}`, err);
+      }
+    });
+
+    return NextResponse.json(newProject);
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to create project", details: error },
+      { status: 500 }
+    );
+  }
 }

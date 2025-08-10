@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/command"
 import { Input } from "./ui/input"
 import { getSuggestedUsers } from "@/services/user"
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
+import { Avatar, AvatarImage } from "./ui/avatar"
 import Link from "next/link"
 import { search } from "@/services/search"
 import { toast } from "sonner"
@@ -136,7 +136,6 @@ export function SearchBar() {
                     <Link href={`/user/${user.username}`} className="flex gap-2 w-full hover:bg-muted items-center">
                       <Avatar className="w-7 h-7">
                         <AvatarImage src={user.avatarUrl} />
-                        <AvatarFallback>{user.name?.[0]}</AvatarFallback>
                       </Avatar>
                       <div>
                         <div className="text-sm font-medium">{user.name} <span className="text-xs text-muted-foreground"> @{user.username}</span></div>
@@ -163,7 +162,6 @@ export function SearchBar() {
                       >
                         <Avatar className="w-7 h-7">
                             <AvatarImage src={user.avatarUrl} />
-                            <AvatarFallback>{user.name[0]}</AvatarFallback>
                         </Avatar>
                         <div>
                           <div className="text-sm font-medium">{user.name} <span className="text-xs text-muted-foreground"> @{user.username}</span></div>

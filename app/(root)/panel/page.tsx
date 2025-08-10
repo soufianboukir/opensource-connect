@@ -36,7 +36,8 @@ export default function Page() {
       status: 'active',
       techStackNeeded: [],
       rolesNeeded: [],
-      tags: []
+      tags: [],
+      createdAt: ''
     },
   })
 
