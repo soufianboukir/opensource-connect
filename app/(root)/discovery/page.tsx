@@ -17,17 +17,24 @@ import { Project } from '@/interfaces'
 import { EmptyState } from '@/components/empty-state'
 import { api } from '@/config/api'
 
+export interface ProjectFiltersType {
+  status: string
+  techStack: string[]
+  roles: string[]
+  tags: string[]
+  sort: 'newest' | 'oldest' | string
+}
 
 export default function Page() {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState<boolean>(true)
-  const [totalProjects,setTotalProjects] = useState(0);
-  const [page,setPage] = useState(1)
-  const [filters, setFilters] = useState({
+  const [totalProjects, setTotalProjects] = useState(0)
+  const [page, setPage] = useState(1)
+  const [filters, setFilters] = useState<ProjectFiltersType>({
     status: '',
-    techStack: [] as string[],
-    roles: [] as string[],
-    tags: [] as string[],
+    techStack: [],
+    roles: [],
+    tags: [],
     sort: 'newest',
   })
 
@@ -41,13 +48,14 @@ export default function Page() {
         filters.techStack.forEach(t => params.append('techStack', t))
         filters.roles.forEach(r => params.append('roles', r))
         filters.tags.forEach(t => params.append('tags', t))
-        params.append('page',page.toString())
+        params.append('page', page.toString())
         if (filters.sort) params.append('sort', filters.sort)
 
         const response = await api.get(`/discovery?${params.toString()}`)
-        setProjects(prev => page === 1 ? response.data.projects : [...prev, ...response.data.projects])
-        setTotalProjects(response.data.total);
-        
+        setProjects(prev =>
+          page === 1 ? response.data.projects : [...prev, ...response.data.projects]
+        )
+        setTotalProjects(response.data.total)
       } catch (err) {
         console.error('Failed to fetch projects:', err)
       } finally {
@@ -56,37 +64,36 @@ export default function Page() {
     }
 
     fetchProjects()
-  }, [filters,page])
+  }, [filters, page])
 
   useEffect(() => {
     const handleScroll = () => {
       const bottomReached =
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 300;
-  
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 300
+
       if (bottomReached && !loading && projects.length < totalProjects) {
-        setPage(prev => prev + 1);
+        setPage(prev => prev + 1)
       }
-    };
-  
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [loading, projects.length, totalProjects]);
-  
-  const handleFilterChange = (newFilters: any) => {
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [loading, projects.length, totalProjects])
+
+  const handleFilterChange = (newFilters: ProjectFiltersType) => {
     const isDifferent =
       newFilters.status !== filters.status ||
       newFilters.sort !== filters.sort ||
       JSON.stringify(newFilters.techStack) !== JSON.stringify(filters.techStack) ||
       JSON.stringify(newFilters.roles) !== JSON.stringify(filters.roles) ||
       JSON.stringify(newFilters.tags) !== JSON.stringify(filters.tags)
-  
+
     if (isDifferent) {
       setProjects([])
       setPage(1)
       setFilters(newFilters)
     }
   }
-  
 
   return (
     <SidebarProvider>
@@ -100,14 +107,17 @@ export default function Page() {
                 <ProjectPreview key={project._id} projectData={project} />
               ))
             ) : null}
-            {
-              !loading && projects.length === 0 && <EmptyState message='No projects found' description='No projects match the current filters. Try adjusting your criteria to see available projects'/>
-            }
-            {
-              (loading && page === 1) && <Loading message="Loading, please wait..." />
-            }
+            {!loading && projects.length === 0 && (
+              <EmptyState
+                message="No projects found"
+                description="No projects match the current filters. Try adjusting your criteria to see available projects"
+              />
+            )}
+            {loading && page === 1 && <Loading message="Loading, please wait..." />}
             {loading && page > 1 && (
-              <div className="text-center text-muted-foreground text-sm py-4">Loading more projects...</div>
+              <div className="text-center text-muted-foreground text-sm py-4">
+                Loading more projects...
+              </div>
             )}
           </div>
           <ProjectFilters onFilterChange={handleFilterChange} />

@@ -1,18 +1,21 @@
 import { auth } from '@/auth'
 import { dbConnection } from '@/config/db'
+import { User as UserInterface } from '@/interfaces';
+import { sendAcceptMssg } from '@/lib/mail';
 import Application from '@/models/application.model'
 import Notification from '@/models/notification.model';
+import User from '@/models/user.model';
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string; action: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string; action: string }> }) {
     try {
         const session = await auth()
         if (!session || !session.user) {
             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
         }
 
-        const { id, action } = params
-
+        const { id, action } = await params
+        
         await dbConnection()
         const application = await Application.findById(id).populate('project')
 
@@ -27,28 +30,36 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
             case 'accept': {
                 if (!isOwner)
                     return NextResponse.json({ message: 'Only the recipient can accept the application' }, { status: 403 })
-                
+            
                 application.status = 'accepted'
                 await application.save()
-                
+            
                 const typeLabel = application.type === 'project application' ? 'application' : 'collaboration request'
                 const projectTitle = application.project?.title
-                
+            
+                const applicantUser = await User.findById(application.applicant).lean<UserInterface>()
+                if (applicantUser?.email) {
+                    await sendAcceptMssg({
+                        toEmail: applicantUser.email,
+                        name: applicantUser.name || applicantUser.username || 'there'
+                    })
+                }
+            
                 await Notification.create({
                     user: application.applicant,
                     fromUser: application.toUser,
-                    type: application.type === 'project application' ? 
-                        'project app accepted'
-                    : 'collaboration accepted',
+                    type: application.type === 'project application' 
+                        ? 'project app accepted'
+                        : 'collaboration accepted',
                     message: application.type === 'project application'
-                    ? `Success! your application${projectTitle ? ` for "${projectTitle}"` : ''} has been accepted.`
-                    : `Success! your collaboration request has been accepted.`,
+                        ? `Success! your application${projectTitle ? ` for "${projectTitle}"` : ''} has been accepted.`
+                        : `Success! your collaboration request has been accepted.`,
                     link: '/apps',
                     read: false,
                 })
-                
+            
                 return NextResponse.json({ message: `The ${typeLabel} has been accepted.`, application })
-                }
+            }            
               
             case 'reject': {
                 if (!isOwner)

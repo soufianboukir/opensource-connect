@@ -49,7 +49,7 @@ export interface Project{
     techStackNeeded: string[],
     rolesNeeded: { role: string; count: number }[],
     tags: string[];
-    createdAt?: string;
+    createdAt: string;
     updatedAt?: string;
 }
 

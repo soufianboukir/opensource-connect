@@ -1,4 +1,3 @@
-// /app/api/applications/[applicationId]/edit/route.ts
 
 import { auth } from '@/auth'
 import { dbConnection } from '@/config/db'

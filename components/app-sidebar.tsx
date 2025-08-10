@@ -9,6 +9,7 @@ import {
   LifeBuoy,
   Mail,
   Send,
+  UserSearch,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -62,6 +63,11 @@ const data = {
       url: "/saved",
       icon: FileText,
     },
+    {
+      title: "Suggested developers",
+      url: "/suggested-devs",
+      icon: UserSearch,
+    },
   ],
   navSecondary: [
     {
@@ -100,7 +106,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   React.useEffect(() =>{
     fetchUnseenMssgs()
   },[])
-  if(status === 'loading') return null
+  if(status === 'loading' || loading) return null
 
   return (
     <Sidebar variant="inset" {...props}>

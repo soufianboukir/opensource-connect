@@ -74,6 +74,7 @@ export function ApplicationActionDialog({ actionType, applicationId, triggerLabe
       const response = await applicationAction(applicationId,actionType)
       if(response.status === 200){
         toast.success(response.data.message)
+        window.location.reload()
       }
     } catch (error: any) {
       if(error.response.data.message){

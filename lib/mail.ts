@@ -144,3 +144,97 @@ export async function sendRegistrationEmail({
         html
     })
 }
+
+
+
+interface RegistrationEmailParams {
+  toEmail: string
+  name: string
+}
+
+export async function sendAcceptMssg({ toEmail, name }: RegistrationEmailParams) {
+  const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+          user: process.env.GOOGLE_SMTP_USER,
+          pass: process.env.GOOGLE_SMTP_PASS,
+      },
+  })
+
+  const subject = `Your application has been accepted`
+
+  const html = `
+      <div style="font-family: Arial, sans-serif; background-color: #f9fafb; padding: 20px; color: #111827;">
+          <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
+              <div style="background-color: #3b82f6; padding: 20px;">
+                  <h2 style="margin: 0; color: white; font-size: 24px;">Application has been accepted</h2>
+              </div>
+              <div style="padding: 20px;">
+                  <p style="font-size: 16px;">Hi <strong>${name}</strong>,</p>
+                  <p style="font-size: 16px;">
+                      Your application has been accepted! You can now send a message to the owner.
+                  </p>
+                  <div style="text-align: center; margin: 30px 0;">
+                      <a href="${process.env.NEXT_PUBLIC_APP_URL}/discovery" style="display: inline-block; padding: 12px 24px; background-color: #3b82f6; color: white; text-decoration: none; border-radius: 6px; font-size: 16px;">
+                          Explore Projects
+                      </a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  `
+
+  await transporter.sendMail({
+      from: process.env.EMAIL_FROM,
+      to: toEmail,
+      subject,
+      html,
+  })
+}
+
+
+
+
+export async function sendNewProjectSubmissionMssg({ toEmail, name, projectTitle }: { toEmail: string; name: string; projectTitle: string }) {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.GOOGLE_SMTP_USER,
+      pass: process.env.GOOGLE_SMTP_PASS,
+    },
+  });
+
+  const subject = `New Project Submitted: ${projectTitle}`;
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; background-color: #f9fafb; padding: 20px; color: #111827;">
+      <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
+        <div style="background-color: #3b82f6; padding: 20px;">
+          <h2 style="margin: 0; color: white; font-size: 24px;">New Project Submitted</h2>
+        </div>
+        <div style="padding: 20px;">
+          <p style="font-size: 16px;">Hi <strong>${name}</strong>,</p>
+          <p style="font-size: 16px;">
+            A new project titled <strong>${projectTitle}</strong> has been submitted.  
+            Please check it out when you have a moment.
+          </p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${process.env.NEXT_PUBLIC_APP_URL}/discovery" style="display: inline-block; padding: 12px 24px; background-color: #3b82f6; color: white; text-decoration: none; border-radius: 6px; font-size: 16px;">
+              View Projects
+            </a>
+          </div>
+          <p style="font-size: 14px; color: #6b7280;">
+            This is an automated notification from Opensource-connect.
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  await transporter.sendMail({
+    from: process.env.EMAIL_FROM,
+    to: toEmail,
+    subject,
+    html,
+  });
+}

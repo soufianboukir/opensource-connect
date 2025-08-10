@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-import { Send } from "lucide-react"
+import { Send, UserPlus } from "lucide-react"
 import { Textarea } from "./ui/textarea"
 import { useState } from "react"
 import { sendApplication } from "@/services/application"
@@ -53,7 +53,8 @@ export function ApplicationSubmission({ proposeCollaboration, project, toUser }:
                 {
                     proposeCollaboration ?
                     <Button className="bg-blue-600 dark:bg-blue-600 text-white hover:bg-blue-700">
-                        Propose collaboration
+                        <span className="hidden md:block">Propose collaboration</span>
+                        <UserPlus className="block md:hidden"/>
                     </Button> 
                     : 
                     <div className="w-9 h-9 rounded-full border flex items-center justify-center bg-gray-100 dark:bg-muted/50 cursor-pointer">

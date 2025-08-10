@@ -8,19 +8,20 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
 import { SiteHeader } from '@/components/ui/site-header';
-import { ProjectFilters } from '@/components/project-filters';
 import { Metadata } from 'next';
 import { ProjectActions } from '@/components/apply-save-status';
 interface ProjectPageProps {
   params: { publicId: string };
 }
 
+
+
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
   await dbConnection();
   await import('@/models/user.model');
-  const project: ProjectInterface | null = await Project.findOne({ publicId: params.publicId })
+  const project = await Project.findOne({ publicId: params.publicId })
                       .populate('owner', 'username name avatarUrl headLine')
-                      .lean();
+                      .lean<ProjectInterface>();
 
   if (!project) {
     return {
@@ -38,9 +39,9 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
 export default async function ProjectPage({ params }: ProjectPageProps) {
   await dbConnection();
   await import('@/models/user.model');
-  const project: ProjectInterface | null = await Project.findOne({ publicId: params.publicId })
+  const project = await Project.findOne({ publicId: params.publicId })
                       .populate('owner', 'username name avatarUrl headLine')
-                      .lean();
+                      .lean<ProjectInterface>();
 
   if (!project) return notFound();
 
@@ -48,9 +49,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <SiteHeader title="Discovery" />
+        <SiteHeader title={`Project by ${project?.owner?.username}`} />
           <div className="flex flex-col-reverse md:flex-row p-4 gap-4">
-            <div className="max-w-4xl mx-auto p-2">
+            <div className="max-w-5xl mx-auto p-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                   <Avatar className="w-[35px] h-[35px]">
@@ -135,7 +136,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               Posted on {new Date(project?.createdAt).toLocaleDateString()}
             </p>
           </div>
-            <ProjectFilters />
           </div>
       </SidebarInset>
     </SidebarProvider>

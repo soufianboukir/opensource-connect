@@ -24,7 +24,7 @@ interface UserProfileProps {
 
 export async function generateMetadata({ params }: UserProfileProps): Promise<Metadata> {
   await dbConnection();
-  const user: IUser | null = await User.findOne({ username: params.username }).lean();
+  const user = await User.findOne({ username: params.username }).lean<IUser>();
 
   if (!user) {
     return {
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: UserProfileProps): Promise<Me
   }
 
   return {
-    title: `${user.username} (${user.name})`,
+    title: `${user.username} (${user.name || 'No name'})`,
     description: `Explore ${user.name}'s porfolio on our platform.`,
   };
 }
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: UserProfileProps): Promise<Me
 export default async function UserProfile({ params }: UserProfileProps) {
   await dbConnection();
   const session = await getServerSession(authOptions);
-  const user:IUser | null = await User.findOne({ username: params.username }).lean();
+  const user = await User.findOne({ username: params.username }).lean<IUser>();
 
   if (!user) return notFound();
 
@@ -52,7 +52,7 @@ export default async function UserProfile({ params }: UserProfileProps) {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <SiteHeader title={`${user.name}'s Profile`} />
+        <SiteHeader title={`${user.name || user.username}'s Profile`} />
 
         <div className="p-6 md:p-6 w-[100%] mx-auto text-center">
           <div className="relative mb-8">
