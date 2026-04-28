@@ -4,6 +4,7 @@
 <img width="2551" height="1259" alt="Screenshot from 2025-07-12 15-47-51" src="https://github.com/user-attachments/assets/b395c2c3-390e-4721-87de-fe3180f8005d" />
 
 
+
 ## Tech Stack
 
 - **Framework:** Next.js 15
